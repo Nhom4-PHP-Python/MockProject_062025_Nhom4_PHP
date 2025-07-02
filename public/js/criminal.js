@@ -63,29 +63,27 @@ const handleAttachments = () => {
     // create html for uploaded files
     const renderUploadedFiles = () => {
         uploadedFilesList.innerHTML = "";
-        let rowCount = 1;
-
         let rows = "";
-        for (let i = 0; i < uploadedFiles.length; i++) {
-            const size = (uploadedFiles[i].size / 1024).toFixed(1); // size in KB
-            const icon = handleIconUploadFiles(uploadedFiles[i].name, uploadedFiles[i].type);
+        uploadedFiles.forEach((file, index) => {
+            const size = (file.size / 1024).toFixed(1); // size in KB
+            const icon = handleIconUploadFiles(file.name, file.type);
             rows +=
                 `
                 <div class="file-item bg-light border"
                         style="width: calc(50% - 5px); padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span><i class="${icon}" style="margin-right: 5px;"></i><b>${uploadedFiles[i].name}</b><small> (${size} KB)</small></span>
-                        <button class="btn btn-default remove-file-btn" data-index="${i}" title="Remove">
+                        <span><i class="${icon}" style="margin-right: 5px;"></i><b>${file.name}</b><small> (${size} KB)</small></span>
+                        <button type="button" class="btn btn-default remove-file-btn" data-index="${index}" title="Remove">
                             <i class="fas fa-trash-alt text-danger"></i>
                         </button>
                 </div>
                 `;
-        }
+        });
         uploadedFilesList.innerHTML = rows;
 
         uploadedFilesList.querySelectorAll('.remove-file-btn').forEach(btn => {
-            btn.onclick = function () {
-                const idx = parseInt(this.getAttribute('data-index'));
-                uploadedFiles.splice(idx, 1);
+            btn.onclick = () => {                
+                const index = parseInt(btn.getAttribute('data-index'));
+                uploadedFiles.splice(index, 1);
                 renderUploadedFiles();
                 updateInputFiles();
             };
