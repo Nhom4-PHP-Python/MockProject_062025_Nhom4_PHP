@@ -31,7 +31,7 @@ const handleAttachments = () => {
     // Show file name into the div
     const renderSelectedFiles = () => {
         selectFileDiv.innerHTML = "";
-        if(fileToUpload.length === 0) return;
+        if (fileToUpload.length === 0) return;
         fileToUpload.forEach(file => {
             const div = document.createElement("div");
             div.className = "text-truncate text-primary small";
@@ -39,7 +39,7 @@ const handleAttachments = () => {
             selectFileDiv.appendChild(div);
         });
     }
-    
+
     // Handle files selected or dropped
     const handleFiles = (files) => {
         fileToUpload = Array.from(files);
@@ -48,8 +48,8 @@ const handleAttachments = () => {
 
     // Upload button
     uploadButton.onclick = () => {
-        if(fileToUpload.length === 0) {
-            alert("Please select files to upload."); 
+        if (fileToUpload.length === 0) {
+            alert("Please select files to upload.");
             return;
         }
         uploadedFiles = uploadedFiles.concat(fileToUpload);
@@ -64,27 +64,26 @@ const handleAttachments = () => {
     const renderUploadedFiles = () => {
         uploadedFilesList.innerHTML = "";
         let rowCount = 1;
-        for (let i = 0; i < uploadedFiles.length; i += 2) {
-            const row = document.createElement('div');
-            row.className = 'row mb-1';
-            for (let j = i; j < i + 2 && j < uploadedFiles.length; j++) {
-                const col = document.createElement('div');
-                col.className = 'col-6';
-                col.innerHTML = `
-                    <div class="border rounded p-2 bg-white d-flex align-items-center justify-content-between">
-                        <span class="text-truncate"><i class="fa fa-file me-2 text-primary"></i>${uploadedFiles[j].name}</span>
-                        <button type="button" class="btn btn-link text-danger p-0 ms-2 remove-file-btn" data-index="${j}" title="Remove">
-                            <i class="fa fa-times"></i>
+
+        let rows = "";
+        for (let i = 0; i < uploadedFiles.length; i++) {
+            const size = (uploadedFiles[i].size / 1024).toFixed(1); // size in KB
+            const icon = handleIconUploadFiles(uploadedFiles[i].name, uploadedFiles[i].type);
+            rows +=
+                `
+                <div class="file-item bg-light border"
+                        style="width: calc(50% - 5px); padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span><i class="${icon}" style="margin-right: 5px;"></i><b>${uploadedFiles[i].name}</b><small> (${size} KB)</small></span>
+                        <button class="btn btn-default remove-file-btn" data-index="${i}" title="Remove">
+                            <i class="fas fa-trash-alt text-danger"></i>
                         </button>
-                    </div>
+                </div>
                 `;
-                row.appendChild(col);
-            }
-            uploadedFilesList.appendChild(row);
-            rowCount++;
         }
+        uploadedFilesList.innerHTML = rows;
+
         uploadedFilesList.querySelectorAll('.remove-file-btn').forEach(btn => {
-            btn.onclick = function() {
+            btn.onclick = function () {
                 const idx = parseInt(this.getAttribute('data-index'));
                 uploadedFiles.splice(idx, 1);
                 renderUploadedFiles();
@@ -100,5 +99,66 @@ const handleAttachments = () => {
         fileInput.files = dataTransfer.files;
     }
 }
-    
+
+const handleIconUploadFiles = (name, type) => {
+    const ext = name.split('.').pop().toLowerCase();
+    if (type.includes('pdf')) return 'fas fa-file-pdf text-danger';
+    if (type.includes('word') || ['doc', 'docx'].includes(ext)) return 'fas fa-file-word text-primary';
+    if (type.includes('excel') || ['xls', 'xlsx'].includes(ext)) return 'fas fa-file-excel text-success';
+    if (type.startsWith('image/')) return 'fas fa-file-image text-info';
+    return 'fas fa-file text-secondary';
+}
+
+const handleUploadFile = () => {
+    const fileInput = document.querySelector("#file_input");
+    const evidenceList = document.querySelector("#evidence-list");
+    let uploadedFiles = [];
+
+    fileInput.onchange = () => {
+        if (fileInput.files.length > 0) {
+            uploadedFiles = uploadedFiles.concat(Array.from(fileInput.files));
+            renderUploadedFiles();
+            updateInputFiles();
+        }
+    }
+
+
+    const renderUploadedFiles = () => {
+        evidenceList.innerHTML = "";
+        let rows = "";
+        uploadedFiles.forEach((file, index) => {
+            const size = (file.size / 1024).toFixed(1); // size in KB
+            const icon = handleIconUploadFiles(file.name, file.type);
+            rows +=
+                `
+                    <div class="evidence-item bg-light border"
+                        style="width: calc(50% - 5px); padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span><i class="${icon}" style="margin-right: 5px;"></i><b>${file.name}</b><small>(${size} KB)</small></span>
+                        <button class="btn btn-default remove-file-btn" data-index="${index}" title="Remove" type="button">
+                            <i class="fas fa-trash-alt text-danger"></i>
+                        </button>
+                    </div>
+                `;
+        });
+        evidenceList.innerHTML = rows;        
+
+        evidenceList.querySelectorAll(".remove-file-btn").forEach(btn => {
+            btn.onclick = () => {
+                const index = parseInt(btn.getAttribute('data-index'));
+                uploadedFiles.splice(index, 1);
+                renderUploadedFiles();
+                updateInputFiles();
+            }
+        });
+        
+    }
+    const updateInputFiles = () => {
+        const dataTransfer = new DataTransfer();
+        uploadedFiles.forEach(file => dataTransfer.items.add(file));
+        fileInput.files = dataTransfer.files;
+    }
+
+
+}
+
 

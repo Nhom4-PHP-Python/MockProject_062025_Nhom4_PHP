@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get("/sc_004", function() {
+    return view('sc_004');
+});
+Route::get("/sc_005", function() {
+    return view('sc_005');
+});
+Route::get("/sc_022", function() {
+    return view('sc_022');
+});
+Route::post("/sc_022", function(Request $request) {
+    dd($request->all());
+});
+Route::post("/sc_005", function(Request $request) {
+    dd($request->all());
+    // return view('sc_005');
+});
+Route::post("/sc_004", function(Request $request) {
+    dd($request->all());
 });

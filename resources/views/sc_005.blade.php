@@ -50,7 +50,8 @@
                     style="min-height:200px;">
                     <p class="text-muted mb-2 mt-4">Drag & drop files or Browser</p>
                     <input type="file" id="attachments" name="attachments[]" multiple class="form-control d-none">
-                    <button type="button" class="btn btn-outline-secondary btn-sm" style="font-weight: 700" id="select-files-btn">Browser</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" style="font-weight: 700"
+                        id="select-files-btn">Browser</button>
                     <!-- show name file selected -->
                     <div id="selected-files" class="mt-2"></div>
                 </div>
@@ -59,7 +60,8 @@
                 <!-- Label Upload -->
                 <div class="mb-1"><label class="form-label">Upload:</label></div>
                 <!-- List of uploaded files -->
-                <div id="uploaded-files-list" class="row"></div>
+                <div id="uploaded-files-list" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                </div>
             </div>
             <div class="row">
                 <div class="col-12 d-flex justify-content-end gap-2">
@@ -70,6 +72,9 @@
         </form>
     </div>
 </body>
+<style>
+
+</style>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
     crossorigin="anonymous"></script>
@@ -79,8 +84,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
     integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="{{asset("js/criminal.js?ver=".rand())}}"></script>
+<script src="{{asset("js/criminal.js?ver=" . rand())}}"></script>
 <script>
     handleAttachments();
 </script>
+
 </html>
