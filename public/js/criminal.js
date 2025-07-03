@@ -80,6 +80,7 @@ const handleAttachments = () => {
         });
         uploadedFilesList.innerHTML = rows;
 
+        // remove item
         uploadedFilesList.querySelectorAll('.remove-file-btn').forEach(btn => {
             btn.onclick = () => {                
                 const index = parseInt(btn.getAttribute('data-index'));
@@ -112,6 +113,7 @@ const handleUploadFile = () => {
     const evidenceList = document.querySelector("#evidence-list");
     let uploadedFiles = [];
 
+    // Choose file from library
     fileInput.onchange = () => {
         if (fileInput.files.length > 0) {
             uploadedFiles = uploadedFiles.concat(Array.from(fileInput.files));
@@ -120,7 +122,7 @@ const handleUploadFile = () => {
         }
     }
 
-
+    // create html for uploaded files
     const renderUploadedFiles = () => {
         evidenceList.innerHTML = "";
         let rows = "";
@@ -139,7 +141,7 @@ const handleUploadFile = () => {
                 `;
         });
         evidenceList.innerHTML = rows;        
-
+        // remove item
         evidenceList.querySelectorAll(".remove-file-btn").forEach(btn => {
             btn.onclick = () => {
                 const index = parseInt(btn.getAttribute('data-index'));
@@ -150,6 +152,7 @@ const handleUploadFile = () => {
         });
         
     }
+    // update file input to submit
     const updateInputFiles = () => {
         const dataTransfer = new DataTransfer();
         uploadedFiles.forEach(file => dataTransfer.items.add(file));

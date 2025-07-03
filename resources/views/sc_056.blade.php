@@ -10,41 +10,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
     <div class="container mt-5">
         <div class="row text-center mb-4">
-            <h3>Initial Evidence</h3>
-            <p class="fst-italic mb-4">This form used to document the initial evidence connected to the incident.</p>
+            <h3>Add the digital investigation information</h3>
+            <p class="fst-italic mb-4">This form is used to record the digital investigation information</p>
         </div>
-        <form method="POST" id="evidence-form">
+        <form method="POST">
             @csrf
             <div class="row mb-3">
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="evidence" class="form-label">Types of Evidence</label>
-                        <select class="form-select" id="evidence" name="evidence">
+                        <label for="type" class="form-label">Types of device/data analyzed</label>
+                        <select class="form-select" id="type" name="type">
                             <option value="">Select an option</option>
                         </select>
                     </div>
-
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="evidence_location" class="form-label">Evidence location</label>
-                        <input type="text" class="form-control" id="evidence_location" name="evidence_location"
-                            placeholder="E.g. At the scene. in the car, ...">
+                        <label for="tools" class="form-label">Analysis tools and methods</label>
+                        <input type="text" class="form-control" id="tools" name="tools" placeholder="TEXT">
                     </div>
                 </div>
             </div>
             <div class="mb-4">
-                <label for="evidence_description" class="form-label">Evidence description</label>
-                <textarea class="form-control" id="evidence_description" name="evidence_description" rows="4"
-                    placeholder="Provide a clear and detailed description of the evidence (shape, material, indentifying features, ...)."></textarea>
-            </div>
-            <div class="mb-4">
-                <label for="attachments" class="form-label">Attachments</label>
+                <label for="attachments" class="form-label">Analysis results</label>
                 <!-- File drag and drop frame -->
                 <div id="drop-area" class="border border-2 rounded-3 p-4 mb-2 text-center bg-light"
                     style="min-height:200px; position: relative;">

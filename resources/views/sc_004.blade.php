@@ -58,17 +58,27 @@
                 <label for="attachments" class="form-label">Attachments</label>
                 <!-- File drag and drop frame -->
                 <div id="drop-area" class="border border-2 rounded-3 p-4 mb-2 text-center bg-light"
-                    style="min-height:200px;">
-                    <p class="text-muted mb-2 mt-4">Drag & drop files or Browser</p>
-                    <input type="file" id="attachments" name="attachments[]" multiple class="form-control d-none">
-                    <button type="button" class="btn btn-outline-secondary btn-sm" style="font-weight: 700" id="select-files-btn">Browser</button>
-                    <!-- show name file selected -->
-                    <div id="selected-files" class="mt-2"></div>
+                    style="min-height:200px; position: relative;">
+                    <div style="border: 2px dashed #6c757d; padding: 20px; background-color: #e9ecef; border-radius: 8px; display: inline-block;">
+                        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3rem;"></i>
+                        <p class="text-muted mb-2 mt-4">
+                            <b>Drag & drop files or </b>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" style="font-weight: 700"
+                                id="select-files-btn">
+                                Browser
+                            </button>
+                        </p>
+                        <input type="file" id="attachments" name="attachments[]" multiple class="form-control d-none">
+                        <p class="text-muted mb-2 mt-4">Supported formates: JPEG, PNG, GIF, MP4, PDF, PSD, AI, Word, PPT
+                        </p>
+                        <!-- show name file selected -->
+                        <div id="selected-files" class="mt-2"></div>
+                    </div>
                 </div>
                 <!-- upload button -->
                 <button type="button" class="btn btn-success btn-sm mb-2" id="upload-btn">Upload file</button>
                 <!-- Label Upload -->
-                <div class="mb-1"><label class="form-label">Upload:</label></div>
+                <div class="mb-1"><label class="form-label">Uploaded:</label></div>
                 <!-- List of uploaded files -->
                 <div id="uploaded-files-list" class="row"></div>
             </div>

@@ -17,8 +17,15 @@ use Illuminate\Support\Facades\Route;
 Route::get("/sc_004", function() {
     return view('sc_004');
 });
+Route::post("/sc_004", function(Request $request) {
+    dd($request->all());
+});
 Route::get("/sc_005", function() {
     return view('sc_005');
+});
+Route::post("/sc_005", function(Request $request) {
+    dd($request->all());
+    // return view('sc_005');
 });
 Route::get("/sc_022", function() {
     return view('sc_022');
@@ -26,10 +33,15 @@ Route::get("/sc_022", function() {
 Route::post("/sc_022", function(Request $request) {
     dd($request->all());
 });
-Route::post("/sc_005", function(Request $request) {
-    dd($request->all());
-    // return view('sc_005');
+Route::get("/sc_056", function() {
+    return view('sc_056');
 });
-Route::post("/sc_004", function(Request $request) {
+Route::post("/sc_056", function(Request $request) {
+    dd($request->all());
+});
+Route::get("/sc_060", function() {
+    return view('sc_060');
+});
+Route::post("/sc_060", function(Request $request) {
     dd($request->all());
 });
