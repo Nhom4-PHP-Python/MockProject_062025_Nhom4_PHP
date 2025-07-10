@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\SC012_013_016;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Cases;
+use App\Models\SC012_013_016\Cases;
 
 
 /**
@@ -19,13 +20,8 @@ class Sc013Controller extends Controller
         // Get the number of entries to show per page (default: 10)
         $perPage = $request->input('show-entries', 10);
         
-        // Build the query to get cases with their related reports, ordered by case_id
-        $query = Cases::with('report')->orderBy('case_id', 'ASC');
-
-        // Apply case_id filter if provided in the request
-        if ($request->filled('case_id')) {
-            $query->where('case_id', $request->input('case_id'));
-        }
+        // Gọi phương thức filter ở Model
+        $query = Cases::filter($request->only(['case_id']));
 
         // Execute the query with pagination
         $cases = $query->paginate($perPage);

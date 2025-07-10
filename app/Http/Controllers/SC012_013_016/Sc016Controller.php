@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Models\SC012_013_016\User;
 
 class Sc016Controller extends Controller
 {

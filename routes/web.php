@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Sc013Controller;
-use App\Http\Controllers\Sc016Controller;
+use App\Http\Controllers\SC012_013_016\Sc013Controller;
+use App\Http\Controllers\SC012_013_016\Sc016Controller;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
