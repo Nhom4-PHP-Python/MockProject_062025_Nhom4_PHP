@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Report;
 use App\Models\Evidence;
+use App\Models\Party;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Psy\Readline\Hoa\Console;
 
 class ReportController extends Controller
 {
@@ -71,7 +73,24 @@ class ReportController extends Controller
                 'is_deleted' => 0,
             ]);
 
-            // Lưu các bên liên quan (Relevant Parties) vào bảng witness
+            // Lưu các bên liên quan (Relevant Parties) từ session report_parties
+            $parties = session('report_parties', []);
+            foreach ($parties as $party) {
+                $attachment = $party['attachment'] ?? null;
+                if ($attachment) {
+                    $uploadedFiles[] = $attachment;
+                }
+                Party::create([
+                    'report_id' => $report->report_id,
+                    'fullname' => $party['fullname'] ?? null,
+                    'contact' =>  null,
+                    'statement' =>  $party['statement'] ?? null,
+                    'is_deleted' => 0,
+                    // Nếu có các trường khác như relationship, gender, nationality thì thêm vào đây nếu DB có
+                ]);
+            }
+
+            // Lưu các bên liên quan (Relevant Parties) vào bảng witness (cũ, giữ lại nếu cần backward compatibility)
             if ($request->has('party_role')) {
                 $party_names = $request->party_name ?? [];
                 $party_statements = $request->party_statement ?? [];
@@ -88,12 +107,11 @@ class ReportController extends Controller
                         $attachment = $party_attachments[$i]->store('witness_attachments', 'public');
                         $uploadedFiles[] = $attachment; // Track for cleanup
                     }
-
-                    DB::table('witness')->insert([
-                        'case_id' => null, // Nếu có case_id thì truyền vào
+                    Party::create([
+                        'report_id' => $report->report_id,
                         'fullname' => $party_names[$i] ?? null,
-                        'contact' => null,
-                        'statement' => $party_statements[$i] ?? null,
+                        'contact' =>  null,
+                        'statement' =>  $party_statements[$i] ?? null,
                         'is_deleted' => 0,
                     ]);
                 }
@@ -102,6 +120,7 @@ class ReportController extends Controller
             // Lưu bằng chứng vào bảng evidences
             if ($request->has('evidence_type')) {
                 $evidence_locations = $request->evidence_location ?? [];
+                Log::info('Evidence locations: ', $evidence_locations);
                 $evidence_descriptions = $request->evidence_description ?? [];
                 $evidence_attachments = $request->file('evidence_attachment') ?? [];
 
@@ -130,7 +149,27 @@ class ReportController extends Controller
                 }
             }
 
+            // Lưu evidence từ session (nếu có)
+            $evidences = session('report_evidences', []);
+            foreach ($evidences as $evidence) {
+                $attachment = $evidence['attachment'] ?? null;
+                if ($attachment) {
+                    $uploadedFiles[] = $attachment;
+                }
+                Evidence::create([
+                    'report_id' => $report->report_id,
+                    'description' => $evidence['description'] ?? null,
+                    'current_location' => $evidence['location'] ?? null,
+                    'attached_file' => $attachment,
+                    'status' => 'Pending',
+                    'is_deleted' => 0,
+                    'type' => $evidence['type'] ?? null,
+                ]);
+            }
+
             session()->forget('report_step1');
+            session()->forget('report_parties');
+            session()->forget('report_evidences');
             DB::commit();
             return redirect()->route('report.confirm', ['id' => $report->report_id]);
         } catch (\Exception $e) {
@@ -155,10 +194,10 @@ class ReportController extends Controller
     }
 
     // Hiển thị form tạo mới relevant party (sc_004)
-    public function createParty()
-    {
-        return view('sc_004');
-    }
+    // public function createParty()
+    // {
+    //     return view('sc_004');
+    // }
     // Lưu relevant party vào session và quay lại step2
     public function storeParty(Request $request)
     {
@@ -175,7 +214,15 @@ class ReportController extends Controller
         Log::info('Validation passed', $validated);
 
         $parties = session('report_parties', []);
-        $parties[] = $validated;
+
+        $parties[] = [
+            'fullname' => $validated['fullname'],
+            'relationship' => $validated['relationship'],
+            'gender' => $validated['gender'] ?? '',
+            'nationality' => $validated['nationality'] ?? '',
+            'statement' => $validated['statement'] ?? '',
+        ];
+
         session(['report_parties' => $parties]);
 
         Log::info('Parties saved to session', $parties);
@@ -183,25 +230,55 @@ class ReportController extends Controller
         return redirect()->route('report.step2')->with('success', __('messages.party_added'));
     }
     // Hiển thị form tạo mới initial evidence (sc_005)
-    public function createEvidence()
-    {
-        return view('sc_005');
-    }
+    // public function createEvidence()
+    // {
+    //     return view('sc_005');
+    // }
     // Lưu initial evidence vào session và quay lại step2
     public function storeEvidence(Request $request)
     {
+        Log::info('storeEvidence called', $request->all());
+
         $validated = $request->validate([
             'type' => 'required|string',
             'location' => 'nullable|string',
             'description' => 'nullable|string',
             'attachments' => 'nullable|array',
+            'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
         ]);
 
+        Log::info('Evidence validation passed', $validated);
+
         $evidences = session('report_evidences', []);
-        $evidences[] = $validated;
+
+        // Xử lý file upload
+        $attachment = null;
+        if ($request->hasFile('attachments')) {
+            $files = $request->file('attachments');
+            $uploadedFiles = [];
+
+            foreach ($files as $file) {
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $path = $file->storeAs('evidence', $filename, 'public');
+                $uploadedFiles[] = $path;
+            }
+
+            // Nếu có nhiều file, lưu file đầu tiên vào attachment
+            $attachment = $uploadedFiles[0] ?? null;
+        }
+
+        $evidences[] = [
+            'type' => $validated['type'],
+            'location' => $validated['location'] ?? '',
+            'description' => $validated['description'] ?? '',
+            'attachment' => $attachment,
+        ];
+
         session(['report_evidences' => $evidences]);
 
-        return redirect()->route('report.step2');
+        Log::info('Evidence saved to session', $evidences);
+
+        return redirect()->route('report.step2')->with('success', __('messages.evidence_added'));
     }
 
     // Hiển thị form chỉnh sửa relevant party

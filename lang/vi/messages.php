@@ -114,6 +114,7 @@ return [
     'description' => 'Mô tả',
     'confirm_delete_evidence' => 'Bạn có chắc muốn xóa bằng chứng này không?',
     'no_evidence_added' => 'Chưa có bằng chứng nào được thêm.',
+    'evidence_added' => 'Đã thêm bằng chứng thành công.',
     'back' => 'Quay lại',
     'submit' => 'Gửi',
 

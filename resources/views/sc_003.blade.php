@@ -250,7 +250,7 @@
                             <td>{{ $evi['location'] ?? '' }}</td>
                             <td>{{ $evi['description'] ?? '' }}</td>
                             <td>
-                                @if ($evi['attachment'])
+                                @if (isset($evi['attachment']) && $evi['attachment'])
                                     <a href="{{ asset('storage/' . $evi['attachment']) }}"
                                         target="_blank">{{ __('messages.file') }}</a>
                                 @endif
