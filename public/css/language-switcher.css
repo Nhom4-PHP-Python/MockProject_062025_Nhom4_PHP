@@ -1,0 +1,117 @@
+/* Language Switcher Styles */
+.language-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.language-dropdown-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.language-dropdown-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.language-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    min-width: 150px;
+    max-height: 300px;
+    overflow-y: auto;
+    display: none;
+}
+
+.language-menu.show {
+    display: block;
+}
+
+.language-menu a {
+    display: block;
+    padding: 0.75rem 1rem;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+}
+
+.language-menu a:hover {
+    background-color: #f8f9fa;
+}
+
+.language-menu a.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.language-menu a.active:hover {
+    background-color: #0056b3;
+}
+
+/* Flash messages styling */
+.alert {
+    margin-bottom: 1rem;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Loading states */
+.language-menu a .fa-spinner {
+    margin-right: 0.5rem;
+}
+
+/* Responsive language menu */
+@media (max-width: 768px) {
+    .language-menu {
+        right: -50px;
+        min-width: 120px;
+    }
+
+    .language-menu a {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* RTL support (for future use) */
+[dir="rtl"] .language-menu {
+    right: auto;
+    left: 0;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .language-menu {
+        background: #333;
+        border-color: #555;
+    }
+
+    .language-menu a {
+        color: #fff;
+    }
+
+    .language-menu a:hover {
+        background-color: #444;
+    }
+}
