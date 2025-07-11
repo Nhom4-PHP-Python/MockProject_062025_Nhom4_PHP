@@ -2,15 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Report;
+use App\Models\SC007_008_011_012\Report;
 use Illuminate\Http\Request;
 
 class Sc007Controller extends Controller
 {
-    // view SC_007
-    public function index(){
-         return view('sc_007');
+
+    public function index(Request $request)
+    {
+        $caseId = 1;
+        //  $request->input('case_id'); // ?case_id=...
+        // $reports = [];
+
+        if ($caseId) {
+            $reports = Report::where('case_id', $caseId)->where('is_deleted', 0)->get();
+        }
+
+        return view('sc_007', compact('reports', 'caseId'));
     }
+
       public function show($id)
     {
         $report = Report::find($id);
@@ -21,6 +31,30 @@ class Sc007Controller extends Controller
 
         return response()->json($report);
     }
+      //Get all undeleted reports
+    public function getAllActiveReports()
+    {
+        $reports = Report::where('is_deleted', 0)->get();
+        return response()->json($reports);
+    }
+
+    //Get report by case_id
+    public function getReportsByCaseId($caseId)
+    {
+        $reports = Report::where('case_id', $caseId)->where('is_deleted', 0)->get();
+        return response()->json($reports);
+    }
+
+    // Get report by status
+    public function getReportsByStatus($status)
+    {
+        $reports = Report::where('status', $status)->where('is_deleted', 0)->get();
+        return response()->json($reports);
+    }
+     
+
+
+    
 }
 
 

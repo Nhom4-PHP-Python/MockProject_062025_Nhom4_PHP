@@ -75,7 +75,29 @@
       </div>
     </div>
   </div>
+  <div>
 
+{{-- @if(isset($reports) && count($reports) > 0)
+    <h3>Danh sách báo cáo cho Case ID: {{ $caseId }}</h3>
+    <ul>
+        @foreach ($reports as $report)
+            <li>{{ $report->type_report }} </li>
+            <li> {{ $report->description }}</li>
+            <li> {{ $report->case_location }}</li>
+            <li> {{ $report->reported_at }}</li>
+            <li> {{ $report->reporter_fullname }}</li>
+            <li> {{ $report->reporter_email }}</li>
+            <li> {{ $report->reporter_phonenumber }}</li>
+            <li> {{ $report->status }}</li>
+            <li> {{ $report->officer_approve_username }}</li>
+            <li> {{ $report->is_deleted }}</li>
+        @endforeach
+    </ul>
+@elseif(isset($caseId))
+    <p>Không tìm thấy báo cáo nào cho Case ID: {{ $caseId }}</p>
+@endif --}}
+
+  </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
