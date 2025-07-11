@@ -1,0 +1,24 @@
+body {
+  background: url('/images/background_login.png') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.login-wrapper {
+  backdrop-filter: blur(4px);
+  padding: 20px;
+}
+
+.login-box {
+  background: rgba(255, 255, 255, 0.9);
+  width: 100%;
+  max-width: 400px;
+}
+
+.toggle-password {
+  color: #6c757d;
+  font-size: 1rem;
+}
+.toggle-password:hover {
+  color: #000;
+}
