@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SC012_013_016\Sc013Controller;
 use App\Http\Controllers\SC012_013_016\Sc016Controller;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ReportController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,3 +30,16 @@ Route::group(['prefix' => 'admin'], function () {
         
     ]);
 });
+
+// Login
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+
+// Logout
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// Reports
+// This route is protected by the 'check.session' middleware to ensure the user is logged in
+Route::get('/reports', [ReportController::class, 'index'])
+    ->middleware('check.session')
+    ->name('reports');
