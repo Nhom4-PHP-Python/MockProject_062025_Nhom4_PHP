@@ -18,11 +18,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/sc_011/report/view', [\App\Http\Controllers\Sc011Controller::class, 'showReportDetail' ]);
+Route::get('/sc_011/report/form', [\App\Http\Controllers\Sc011Controller::class, 'showReportFormWithDetails' ]);
 
-Route::get('sc_007', [\App\Http\Controllers\Sc007Controller::class, 'index' ]);
-Route::get('sc_008', [\App\Http\Controllers\Sc008Controller::class, 'index' ]);
-Route::get('sc_011', [\App\Http\Controllers\Sc011Controller::class, 'index' ]);
-Route::get('sc_012', [\App\Http\Controllers\Sc012Controller::class, 'index' ]);
-
-
-Route::get('/reports/{id}', [ReportController::class, 'show']);
