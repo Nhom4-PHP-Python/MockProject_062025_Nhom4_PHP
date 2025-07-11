@@ -106,10 +106,9 @@
                             <td class="text-center">
                                 <a href="{{ route('report.party.edit', $idx) }}" class="text-primary me-2"
                                     title="{{ __('messages.edit') }}"><i class="bi bi-pencil-square"></i></a>
-                                <a href="{{ route('report.party.delete', $idx) }}" class="text-danger"
-                                    title="{{ __('messages.delete') }}"
-                                    onclick="return confirm('{{ __('messages.confirm_delete_party') }}')"><i
-                                        class="bi bi-trash"></i></a>
+                                <a href="{{ route('report.party.delete', $idx) }}" class="text-danger delete-icon"
+                                    data-url="{{ route('report.party.delete', $idx) }}"
+                                    title="{{ __('messages.delete') }}"><i class="bi bi-trash"></i></a>
                             </td>
                         </tr>
                     @empty
@@ -195,6 +194,29 @@
             </div>
         </div>
 
+        <!-- Confirmation Modal for Relevant Parties -->
+        <div class="modal fade" id="partyConfirmModal" tabindex="-1" aria-labelledby="partyConfirmModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="partyConfirmModalLabel">
+                            {{ __('messages.confirm_party_submission') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="partyPreview"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">{{ __('messages.cancel') }}</button>
+                        <button type="button" class="btn btn-dark"
+                            id="confirmPartyAction">{{ __('messages.yes') }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Confirmation Modal for Main Submit -->
         <div class="modal fade" id="mainSubmitConfirmModal" tabindex="-1" aria-labelledby="mainSubmitConfirmModalLabel"
             aria-hidden="true">
@@ -258,10 +280,9 @@
                             <td class="text-center">
                                 <a href="{{ route('report.evidence.edit', $idx) }}" class="text-primary me-2"
                                     title="{{ __('messages.edit') }}"><i class="bi bi-pencil-square"></i></a>
-                                <a href="{{ route('report.evidence.delete', $idx) }}" class="text-danger"
-                                    title="{{ __('messages.delete') }}"
-                                    onclick="return confirm('{{ __('messages.confirm_delete_evidence') }}')"><i
-                                        class="bi bi-trash"></i></a>
+                                <a href="{{ route('report.evidence.delete', $idx) }}" class="text-danger delete-icon"
+                                    data-url="{{ route('report.evidence.delete', $idx) }}"
+                                    title="{{ __('messages.delete') }}"><i class="bi bi-trash"></i></a>
                             </td>
                         </tr>
                     @empty
@@ -329,13 +350,81 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary"
                             data-bs-dismiss="modal">{{ __('messages.cancel') }}</button>
-                        <button type="submit" class="btn btn-dark"
-                            form="initialEvidenceForm">{{ __('messages.create') }}</button>
+                        <button type="button" class="btn btn-dark"
+                            id="confirmEvidenceSubmit">{{ __('messages.create') }}</button>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Confirmation Modal for Initial Evidence -->
+        <div class="modal fade" id="evidenceConfirmModal" tabindex="-1" aria-labelledby="evidenceConfirmModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="evidenceConfirmModalLabel">
+                            {{ __('messages.confirm_evidence_submission') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="evidencePreview"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">{{ __('messages.cancel') }}</button>
+                        <button type="button" class="btn btn-dark"
+                            id="confirmEvidenceAction">{{ __('messages.yes') }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal (Styled) -->
+        <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content custom-modal-content">
+                    <div class="modal-body text-center py-4 px-4">
+                        <div style="font-size: 2.5rem; color: #e57373; margin-bottom: 10px;">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                        </div>
+                        <h4 class="mb-2 fw-bold" style="color: #222;">Delete</h4>
+                        <p style="color: #444;">Are you sure you want to delete this record?</p>
+                        <div class="d-flex justify-content-center gap-2 mt-3">
+                            <button type="button" class="btn btn-outline-secondary px-4"
+                                data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-dark px-4" id="confirmDeleteBtn">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .custom-modal-content {
+                border-radius: 16px !important;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+            }
+
+            .modal-backdrop.show {
+                opacity: 0.5 !important;
+                background: #222 !important;
+            }
+
+            .btn-dark {
+                background: #222;
+                border: none;
+            }
+
+            .btn-dark:hover {
+                background: #444;
+            }
+
+            .btn-outline-secondary {
+                border-radius: 6px;
+            }
+        </style>
 
         <div class="d-flex justify-content-end mt-4">
             <a href="{{ route('report.step1') }}" class="btn btn-outline-secondary"
@@ -346,7 +435,7 @@
     </form>
     </div>
     @push('scripts')
-        <script src="{{ asset('js/app.js') }}"></script>
+        <script src="{{ asset('js/java.js') }}"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 // Confirmation for relevant party submit
@@ -361,12 +450,12 @@
                     const relationship = document.getElementById('relationship').value;
 
                     if (!fullname) {
-                        alert('{{ __('messages.fullname') }} là bắt buộc');
+                        alert('{{ __('messages.fullname') }} is required');
                         return;
                     }
 
                     if (!relationship) {
-                        alert('{{ __('messages.relationship_to_incident') }} là bắt buộc');
+                        alert('{{ __('messages.relationship_to_incident') }} is required');
                         return;
                     }
 
@@ -377,7 +466,7 @@
 
                     const relationshipText = document.querySelector('#relationship option:checked').textContent;
                     const genderText = gender ? document.querySelector('#gender option:checked').textContent :
-                        'Không có';
+                        'None';
 
                     document.getElementById('partyPreview').innerHTML = `
                         <div class="row">
@@ -387,7 +476,7 @@
                             </div>
                             <div class="col-md-6">
                                 <p><strong>{{ __('messages.relationship_to_incident') }}:</strong> ${relationshipText}</p>
-                                <p><strong>{{ __('messages.nationality') }}:</strong> ${nationality || 'Không có'}</p>
+                                <p><strong>{{ __('messages.nationality') }}:</strong> ${nationality || 'None'}</p>
                             </div>
                         </div>
                         ${statement ? `<p><strong>{{ __('messages.statement') }}:</strong> ${statement}</p>` : ''}
@@ -414,7 +503,7 @@
                     const type = document.getElementById('type').value;
 
                     if (!type) {
-                        alert('{{ __('messages.types_of_evidence') }} là bắt buộc');
+                        alert('{{ __('messages.types_of_evidence') }} is required');
                         return;
                     }
 
@@ -438,10 +527,10 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <p><strong>{{ __('messages.types_of_evidence') }}:</strong> ${typeText}</p>
-                                <p><strong>{{ __('messages.location') }}:</strong> ${location || 'Không có'}</p>
+                                <p><strong>{{ __('messages.location') }}:</strong> ${location || 'None'}</p>
                             </div>
                             <div class="col-md-6">
-                                <p><strong>{{ __('messages.description') }}:</strong> ${description || 'Không có'}</p>
+                                <p><strong>{{ __('messages.description') }}:</strong> ${description || 'None'}</p>
                             </div>
                         </div>
                         ${attachmentsList}
@@ -458,29 +547,46 @@
                     document.getElementById('initialEvidenceForm').submit();
                 });
 
-                // MAIN FORM SUBMIT - Đơn giản hóa chỉ dùng 1 modal
+                // MAIN FORM SUBMIT - Simplified to use only 1 modal
                 document.getElementById('confirmMainSubmit').addEventListener('click', function(e) {
                     e.preventDefault();
                     console.log('Main submit button clicked');
 
                     const form = document.querySelector('form[action="{{ route('report.postStep2') }}"]');
 
-                    // Kiểm tra form có hợp lệ không
+                    // Check if the form is valid
                     if (form.checkValidity()) {
-                        // Hiển thị modal xác nhận
+                        // Show confirmation modal
                         const mainSubmitConfirmModal = new bootstrap.Modal(document.getElementById(
                             'mainSubmitConfirmModal'));
                         mainSubmitConfirmModal.show();
                     } else {
-                        // Hiển thị lỗi validation
+                        // Show validation error
                         form.reportValidity();
                     }
                 });
 
-                // Submit thật sau khi xác nhận
+                // Actual submit after confirmation
                 document.getElementById('confirmMainAction').addEventListener('click', function() {
                     console.log('Confirmed main submit');
                     document.querySelector('form[action="{{ route('report.postStep2') }}"]').submit();
+                });
+
+                let deleteUrl = null;
+                // Use event delegation for delete button
+                document.body.addEventListener('click', function(e) {
+                    const btn = e.target.closest('.delete-icon');
+                    if (btn) {
+                        e.preventDefault();
+                        deleteUrl = btn.getAttribute('data-url');
+                        const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+                        modal.show();
+                    }
+                });
+                document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+                    if (deleteUrl) {
+                        window.location.href = deleteUrl;
+                    }
                 });
             });
         </script>

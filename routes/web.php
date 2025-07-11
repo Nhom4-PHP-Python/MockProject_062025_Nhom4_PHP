@@ -27,6 +27,7 @@ Route::post('/report/step2', [ReportController::class, 'postStep2'])->name('repo
 Route::get('/report/step3', [ReportController::class, 'step3'])->name('report.step3');
 Route::get('/report/party/create', [ReportController::class, 'createParty'])->name('report.party.create');
 Route::post('/report/party/store', [ReportController::class, 'storeParty'])->name('report.party.store');
+Route::post('/report/party/store-ajax', [ReportController::class, 'storePartyAjax'])->name('report.party.storeAjax');
 Route::get('/report/evidence/create', [ReportController::class, 'createEvidence'])->name('report.evidence.create');
 Route::post('/report/evidence/store', [ReportController::class, 'storeEvidence'])->name('report.evidence.store');
 Route::get('/report/confirm/{id}', [ReportController::class, 'confirm'])->name('report.confirm');

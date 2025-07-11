@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Report;
-use App\Models\Party;
-use App\Models\Evidence;
+use App\Models\sc_001_002_003_006\Report;
+use App\Models\sc_001_002_003_006\Party;
+use App\Models\sc_001_002_003_006\Evidence;
 use Illuminate\Support\Facades\Log;
 
 class SearchController extends Controller
 {
     /**
-     * Thực hiện tìm kiếm
+     * Perform search
      */
     public function search(Request $request)
     {
@@ -19,7 +19,7 @@ class SearchController extends Controller
         $results = [];
 
         if (!empty($query)) {
-            // Tìm kiếm trong báo cáo
+            // Search in reports
             $reports = Report::where('case_id', 'LIKE', "%{$query}%")
                 ->orWhere('type_report', 'LIKE', "%{$query}%")
                 ->orWhere('description', 'LIKE', "%{$query}%")
@@ -27,7 +27,7 @@ class SearchController extends Controller
                 ->orWhere('reporter_fullname', 'LIKE', "%{$query}%")
                 ->get();
 
-            // Tìm kiếm trong bằng chứng (nếu có model Evidence)
+            // Search in evidence (if Evidence model exists)
             $evidence = collect(); // Empty collection if no Evidence model
             try {
                 $evidence = Evidence::where('evidence_type', 'LIKE', "%{$query}%")
@@ -54,7 +54,7 @@ class SearchController extends Controller
     }
 
     /**
-     * Tìm kiếm AJAX
+     * Search AJAX
      */
     public function ajaxSearch(Request $request)
     {
@@ -62,7 +62,7 @@ class SearchController extends Controller
         $results = [];
 
         if (!empty($query) && strlen($query) >= 2) {
-            // Tìm kiếm nhanh trong báo cáo
+            // Quick search in reports
             $reports = Report::where('case_id', 'LIKE', "%{$query}%")
                 ->orWhere('type_report', 'LIKE', "%{$query}%")
                 ->orWhere('reporter_fullname', 'LIKE', "%{$query}%")

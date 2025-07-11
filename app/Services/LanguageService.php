@@ -8,23 +8,23 @@ use Illuminate\Support\Facades\Session;
 class LanguageService
 {
     /**
-     * Danh sách các ngôn ngữ được hỗ trợ
+     * List of supported languages
      */
     const SUPPORTED_LOCALES = [
         'en' => ['name' => 'English', 'flag' => '🇺🇸', 'direction' => 'ltr'],
-        'vi' => ['name' => 'Tiếng Việt', 'flag' => '🇻🇳', 'direction' => 'ltr'],
-        'zh' => ['name' => '中文', 'flag' => '🇨🇳', 'direction' => 'ltr'],
-        'es' => ['name' => 'Español', 'flag' => '🇪🇸', 'direction' => 'ltr'],
-        'fr' => ['name' => 'Français', 'flag' => '🇫🇷', 'direction' => 'ltr'],
-        'de' => ['name' => 'Deutsch', 'flag' => '🇩🇪', 'direction' => 'ltr'],
-        'ja' => ['name' => '日本語', 'flag' => '🇯🇵', 'direction' => 'ltr'],
-        'ko' => ['name' => '한국어', 'flag' => '🇰🇷', 'direction' => 'ltr'],
-        'it' => ['name' => 'Italiano', 'flag' => '🇮🇹', 'direction' => 'ltr'],
-        'ru' => ['name' => 'Русский', 'flag' => '🇷🇺', 'direction' => 'ltr'],
+        'vi' => ['name' => 'Vietnamese', 'flag' => '🇻🇳', 'direction' => 'ltr'],
+        'zh' => ['name' => 'Chinese', 'flag' => '🇨🇳', 'direction' => 'ltr'],
+        'es' => ['name' => 'Spanish', 'flag' => '🇪🇸', 'direction' => 'ltr'],
+        'fr' => ['name' => 'French', 'flag' => '🇫🇷', 'direction' => 'ltr'],
+        'de' => ['name' => 'German', 'flag' => '🇩🇪', 'direction' => 'ltr'],
+        'ja' => ['name' => 'Japanese', 'flag' => '🇯🇵', 'direction' => 'ltr'],
+        'ko' => ['name' => 'Korean', 'flag' => '🇰🇷', 'direction' => 'ltr'],
+        'it' => ['name' => 'Italian', 'flag' => '🇮🇹', 'direction' => 'ltr'],
+        'ru' => ['name' => 'Russian', 'flag' => '🇷🇺', 'direction' => 'ltr'],
     ];
 
     /**
-     * Kiểm tra xem ngôn ngữ có được hỗ trợ không
+     * Check if the language is supported
      */
     public static function isSupported($locale)
     {
@@ -32,7 +32,7 @@ class LanguageService
     }
 
     /**
-     * Lấy danh sách tất cả ngôn ngữ được hỗ trợ
+     * Get the list of all supported languages
      */
     public static function getSupportedLocales()
     {
@@ -40,7 +40,7 @@ class LanguageService
     }
 
     /**
-     * Lấy thông tin ngôn ngữ hiện tại
+     * Get current language info
      */
     public static function getCurrentLanguage()
     {
@@ -52,7 +52,7 @@ class LanguageService
     }
 
     /**
-     * Đặt ngôn ngữ
+     * Set language
      */
     public static function setLanguage($locale)
     {
@@ -66,7 +66,7 @@ class LanguageService
     }
 
     /**
-     * Lấy ngôn ngữ từ session hoặc mặc định
+     * Get language from session or default
      */
     public static function getLanguage()
     {
@@ -81,7 +81,7 @@ class LanguageService
     }
 
     /**
-     * Lấy fallback locale
+     * Get fallback locale
      */
     public static function getFallbackLocale()
     {
@@ -89,7 +89,7 @@ class LanguageService
     }
 
     /**
-     * Kiểm tra xem key ngôn ngữ có tồn tại không
+     * Check if language key exists
      */
     public static function hasTranslation($key, $locale = null)
     {
@@ -98,24 +98,24 @@ class LanguageService
     }
 
     /**
-     * Lấy bản dịch với fallback
+     * Get translation with fallback
      */
     public static function getTranslation($key, $parameters = [], $locale = null)
     {
         $locale = $locale ?? App::getLocale();
 
-        // Kiểm tra xem key có tồn tại trong ngôn ngữ hiện tại không
+        // Check if key exists in the current language
         if (self::hasTranslation($key, $locale)) {
             return __($key, $parameters, $locale);
         }
 
-        // Fallback về ngôn ngữ mặc định
+        // Fallback to default language
         $fallbackLocale = self::getFallbackLocale();
         if (self::hasTranslation($key, $fallbackLocale)) {
             return __($key, $parameters, $fallbackLocale);
         }
 
-        // Trả về key nếu không tìm thấy bản dịch
+        // Return key if no translation found
         return $key;
     }
 }

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Report;
-use App\Models\Evidence;
-use App\Models\Party;
+use App\Models\sc_001_002_003_006\Report;
+use App\Models\sc_001_002_003_006\Evidence;
+use App\Models\sc_001_002_003_006\Party;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -14,13 +14,13 @@ use Psy\Readline\Hoa\Console;
 
 class ReportController extends Controller
 {
-    // Step 1: Hiển thị form nhập thông tin người báo
+    // Step 1: Display form for entering reporter information
     public function step1()
     {
         return view('sc_002');
     }
 
-    // Step 1: Nhận dữ liệu, lưu vào session, chuyển sang step 2
+    // Step 1: Receive data, save to session, move to step 2
     public function postStep1(Request $request)
     {
         $validated = $request->validate([
@@ -33,7 +33,7 @@ class ReportController extends Controller
         return redirect()->route('report.step2');
     }
 
-    // Step 2: Hiển thị form nhập thông tin vụ việc
+    // Step 2: Display form for entering incident information
     public function step2()
     {
         $step1 = session('report_step1');
@@ -41,7 +41,7 @@ class ReportController extends Controller
         return view('sc_003', compact('step1'));
     }
 
-    // Step 2: Nhận dữ liệu, lưu vào database, chuyển sang step 3
+    // Step 2: Receive data, save to database, move to step 3
     public function postStep2(Request $request)
     {
         $step1 = session('report_step1');
@@ -73,7 +73,7 @@ class ReportController extends Controller
                 'is_deleted' => 0,
             ]);
 
-            // Lưu các bên liên quan (Relevant Parties) từ session report_parties
+            // Save relevant parties from session report_parties
             $parties = session('report_parties', []);
             foreach ($parties as $party) {
                 $attachment = $party['attachment'] ?? null;
@@ -86,11 +86,11 @@ class ReportController extends Controller
                     'contact' =>  null,
                     'statement' =>  $party['statement'] ?? null,
                     'is_deleted' => 0,
-                    // Nếu có các trường khác như relationship, gender, nationality thì thêm vào đây nếu DB có
+                    // If there are other fields like relationship, gender, nationality, add them here if DB has them
                 ]);
             }
 
-            // Lưu các bên liên quan (Relevant Parties) vào bảng witness (cũ, giữ lại nếu cần backward compatibility)
+            // Save relevant parties to witness table (old, keep for backward compatibility)
             if ($request->has('party_role')) {
                 $party_names = $request->party_name ?? [];
                 $party_statements = $request->party_statement ?? [];
@@ -117,7 +117,7 @@ class ReportController extends Controller
                 }
             }
 
-            // Lưu bằng chứng vào bảng evidences
+            // Save evidence to evidences table
             if ($request->has('evidence_type')) {
                 $evidence_locations = $request->evidence_location ?? [];
                 Log::info('Evidence locations: ', $evidence_locations);
@@ -186,19 +186,19 @@ class ReportController extends Controller
         }
     }
 
-    // Step 3: Xác nhận
+    // Step 3: Confirmation
     public function confirm($id)
     {
         $report = Report::findOrFail($id);
         return view('sc_006', compact('report'));
     }
 
-    // Hiển thị form tạo mới relevant party (sc_004)
+    // Display form to create new relevant party (sc_004)
     // public function createParty()
     // {
     //     return view('sc_004');
     // }
-    // Lưu relevant party vào session và quay lại step2
+    // Save relevant party to session and return to step2
     public function storeParty(Request $request)
     {
         Log::info('storeParty called', $request->all());
@@ -229,12 +229,41 @@ class ReportController extends Controller
 
         return redirect()->route('report.step2')->with('success', __('messages.party_added'));
     }
-    // Hiển thị form tạo mới initial evidence (sc_005)
+
+    public function storePartyAjax(Request $request)
+    {
+        if (!$request->ajax()) {
+            return response()->json(['success' => false, 'message' => 'Invalid request'], 400);
+        }
+
+        $validated = $request->validate([
+            'fullname' => 'required|string|max:100',
+            'relationship' => 'required|string',
+            'gender' => 'nullable|string',
+            'nationality' => 'nullable|string',
+            'statement' => 'nullable|string',
+        ]);
+
+        $parties = session('report_parties', []);
+        $parties[] = [
+            'fullname' => $validated['fullname'],
+            'relationship' => $validated['relationship'],
+            'gender' => $validated['gender'] ?? '',
+            'nationality' => $validated['nationality'] ?? '',
+            'statement' => $validated['statement'] ?? '',
+        ];
+        session(['report_parties' => $parties]);
+
+        // Render lại toàn bộ bảng parties (dùng view partial hoặc inline HTML)
+        $html = view('partials.relevant_parties_table', ['parties' => $parties])->render();
+        return response()->json(['success' => true, 'html' => $html]);
+    }
+    // Display form to create new initial evidence (sc_005)
     // public function createEvidence()
     // {
     //     return view('sc_005');
     // }
-    // Lưu initial evidence vào session và quay lại step2
+    // Save initial evidence to session and return to step2
     public function storeEvidence(Request $request)
     {
         Log::info('storeEvidence called', $request->all());
@@ -251,7 +280,7 @@ class ReportController extends Controller
 
         $evidences = session('report_evidences', []);
 
-        // Xử lý file upload
+        // Handle file upload
         $attachment = null;
         if ($request->hasFile('attachments')) {
             $files = $request->file('attachments');
@@ -263,7 +292,7 @@ class ReportController extends Controller
                 $uploadedFiles[] = $path;
             }
 
-            // Nếu có nhiều file, lưu file đầu tiên vào attachment
+            // If there are multiple files, save the first file to attachment
             $attachment = $uploadedFiles[0] ?? null;
         }
 
@@ -281,7 +310,7 @@ class ReportController extends Controller
         return redirect()->route('report.step2')->with('success', __('messages.evidence_added'));
     }
 
-    // Hiển thị form chỉnh sửa relevant party
+    // Display form to edit relevant party
     public function editParty($idx)
     {
         $parties = session('report_parties', []);
@@ -292,7 +321,7 @@ class ReportController extends Controller
         return view('sc_004', compact('party', 'idx'));
     }
 
-    // Cập nhật relevant party
+    // Update relevant party
     public function updateParty(Request $request, $idx)
     {
         $parties = session('report_parties', []);
@@ -339,7 +368,7 @@ class ReportController extends Controller
         }
     }
 
-    // Xóa relevant party
+    // Delete relevant party
     public function deleteParty($idx)
     {
         $parties = session('report_parties', []);
@@ -357,7 +386,7 @@ class ReportController extends Controller
         return redirect()->route('report.step2');
     }
 
-    // Hiển thị form chỉnh sửa evidence
+    // Display form to edit evidence
     public function editEvidence($idx)
     {
         $evidences = session('report_evidences', []);
@@ -368,7 +397,7 @@ class ReportController extends Controller
         return view('sc_005', compact('evidence', 'idx'));
     }
 
-    // Cập nhật evidence
+    // Update evidence
     public function updateEvidence(Request $request, $idx)
     {
         $evidences = session('report_evidences', []);
@@ -415,7 +444,7 @@ class ReportController extends Controller
         }
     }
 
-    // Xóa evidence
+    // Delete evidence
     public function deleteEvidence($idx)
     {
         $evidences = session('report_evidences', []);
@@ -433,7 +462,7 @@ class ReportController extends Controller
         return redirect()->route('report.step2');
     }
 
-    // Step 3: Hiển thị thông tin xác nhận
+    // Step 3: Display confirmation information
     public function step3()
     {
         $reportId = session('report_step1.report_id');

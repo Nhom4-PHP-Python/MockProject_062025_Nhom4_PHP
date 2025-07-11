@@ -64,11 +64,5 @@
             </table>
         </div>
 </div>
-<style>
-    .stepper { display: flex; align-items: center; justify-content: center; }
-    .step { width: 45px; height: 45px; border-radius: 50%; background: #eee; color: #222; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; }
-    .step.active { background: #111; color: #fff; }
-    .step-line { width: 270px; height: 3px; background: #ccc; margin: 0 0; }
-    @media (max-width: 500px) { .stepper { flex-direction: column; } .step-line { width: 3px; height: 30px; margin: 4px 0; } .step-labels { flex-direction: column; align-items: center; } }
-</style>
+
 @endsection 

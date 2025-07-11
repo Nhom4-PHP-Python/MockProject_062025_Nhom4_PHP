@@ -10,30 +10,30 @@ use App\Services\LanguageService;
 class LanguageController extends Controller
 {
     /**
-     * Thay đổi ngôn ngữ của ứng dụng
+     * Change the application's language
      */
     public function changeLanguage(Request $request, $locale)
     {
-        // Kiểm tra locale có được hỗ trợ không
+        // Check if the locale is supported
         if (!LanguageService::isSupported($locale)) {
-            return redirect()->back()->with('error', 'Ngôn ngữ không được hỗ trợ.');
+            return redirect()->back()->with('error', 'Language not supported.');
         }
 
-        // Đặt ngôn ngữ
+        // Set the language
         $success = LanguageService::setLanguage($locale);
 
         if ($success) {
             $languageInfo = LanguageService::getSupportedLocales()[$locale];
             $languageName = $languageInfo['name'];
 
-            return redirect()->back()->with('success', "Đã chuyển đổi ngôn ngữ thành {$languageName}.");
+            return redirect()->back()->with('success', "Language switched to {$languageName}.");
         }
 
-        return redirect()->back()->with('error', 'Không thể chuyển đổi ngôn ngữ.');
+        return redirect()->back()->with('error', 'Unable to switch language.');
     }
 
     /**
-     * Lấy danh sách ngôn ngữ được hỗ trợ
+     * Get the list of supported languages
      */
     public function getSupportedLanguages()
     {
@@ -41,7 +41,7 @@ class LanguageController extends Controller
     }
 
     /**
-     * Lấy ngôn ngữ hiện tại
+     * Get the current language
      */
     public function getCurrentLanguage()
     {
@@ -49,7 +49,7 @@ class LanguageController extends Controller
     }
 
     /**
-     * API endpoint để lấy thông tin ngôn ngữ
+     * API endpoint to get language information
      */
     public function getLanguageInfo(Request $request)
     {
