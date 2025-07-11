@@ -74,7 +74,7 @@
                     </div>
                 </div>
                 <div class="text-end">
-                    <button type="submit" class="btn btn-dark">{{ __('messages.next') }}</button>
+                    <button type="submit" style="width: 150px;" class="btn btn-dark">{{ __('messages.next') }}</button>
                 </div>
             </div>
         </form>

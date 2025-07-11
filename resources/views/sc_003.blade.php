@@ -119,7 +119,7 @@
                         </tbody>
                     </table>
                     <div class="text-end">
-                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
+                        <button type="button" style="width: 100px;" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
                             data-bs-target="#relevantPartyModal">{{ __('messages.add') }}</button>
                     </div>
                 </div>
@@ -172,15 +172,15 @@
                         </tbody>
                     </table>
                     <div class="text-end">
-                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
+                        <button type="button" style="width: 100px;" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
                             data-bs-target="#initialEvidenceModal">{{ __('messages.add') }}</button>
                     </div>
                 </div>
 
                 <div class="d-flex justify-content-end mt-4">
                     <a href="{{ route('report.step1') }}"
-                        class="btn btn-outline-secondary me-2">{{ __('messages.back') }}</a>
-                    <button type="button" class="btn btn-dark"
+                        class="btn btn-outline-secondary me-2" style="width: 150px;">{{ __('messages.back') }}</a>
+                    <button type="button" class="btn btn-dark" style="width: 150px;"
                         id="confirmMainSubmit">{{ __('messages.submit') }}</button>
                 </div>
             </div>
@@ -192,8 +192,8 @@
         aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="relevantPartyModalLabel">{{ __('messages.add_relevant_party') }}</h5>
+                <div class="modal-header ">
+                    <h5 class="modal-title " id="relevantPartyModalLabel">{{ __('messages.add_relevant_party') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="partyForm" method="POST" action="{{ route('report.party.store') }}"
@@ -243,9 +243,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
+                        <button type="button" class="btn btn-outline-secondary"
                             data-bs-dismiss="modal">{{ __('messages.cancel') }}</button>
-                        <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
+                        <button type="submit" class="btn btn-dark">{{ __('messages.create') }}</button>
                     </div>
                 </form>
             </div>
@@ -305,9 +305,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
+                        <button type="button" class="btn btn-outline-secondary"
                             data-bs-dismiss="modal">{{ __('messages.cancel') }}</button>
-                        <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
+                        <button type="submit" class="btn btn-dark">{{ __('messages.create') }}</button>
                     </div>
                 </form>
             </div>
