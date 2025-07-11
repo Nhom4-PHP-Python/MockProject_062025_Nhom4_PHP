@@ -21,32 +21,32 @@ class LocaleMiddleware
     {
         $locale = $this->getLocale($request);
 
-        // Đặt locale cho ứng dụng
+        // Set locale for the application
         App::setLocale($locale);
 
         return $next($request);
     }
 
     /**
-     * Xác định locale hiện tại
+     * Determine current locale
      */
     private function getLocale(Request $request)
     {
-        // Ưu tiên: URL parameter -> Session -> Browser -> Default
+        // Priority: URL parameter -> Session -> Browser -> Default
 
-        // 1. Kiểm tra URL parameter
+        // 1. Check URL parameter
         if ($request->has('lang') && LanguageService::isSupported($request->get('lang'))) {
             $locale = $request->get('lang');
             Session::put('locale', $locale);
             return $locale;
         }
 
-        // 2. Kiểm tra Session
+        // 2. Check Session
         if (Session::has('locale') && LanguageService::isSupported(Session::get('locale'))) {
             return Session::get('locale');
         }
 
-        // 3. Kiểm tra Accept-Language header từ browser
+        // 3. Check Accept-Language header from browser
         $acceptLanguage = $request->header('Accept-Language');
         if ($acceptLanguage) {
             $languages = explode(',', $acceptLanguage);
@@ -59,7 +59,7 @@ class LocaleMiddleware
             }
         }
 
-        // 4. Mặc định là tiếng Anh
+        // 4. Default to English
         $defaultLocale = config('app.locale', 'en');
         Session::put('locale', $defaultLocale);
         return $defaultLocale;

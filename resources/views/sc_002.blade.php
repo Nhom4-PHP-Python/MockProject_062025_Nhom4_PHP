@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app.app')
 @section('title', __('messages.crime_report_step1'))
 @section('content')
     <div class="container">

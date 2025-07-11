@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\ReportController;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\sc_001_002_003_006\Report;
 use App\Models\sc_001_002_003_006\Evidence;
 use App\Models\sc_001_002_003_006\Party;
@@ -84,8 +85,8 @@ class ReportController extends Controller
                     'report_id' => $report->report_id,
                     'fullname' => $party['fullname'] ?? null,
                     'relationship' => $party['relationship'] ?? '',
-                    'gender' => $party['gender'] ?? null,         // Thêm dòng này
-                    'nationality' => $party['nationality'] ?? null, // Thêm dòng này
+                    'gender' => $party['gender'] ?? null,         // Add this line
+                    'nationality' => $party['nationality'] ?? null, // Add this line
                     'contact' =>  null,
                     'statement' =>  $party['statement'] ?? null,
                     // If there are other fields like gender, nationality, add them here if DB has them
@@ -154,7 +155,7 @@ class ReportController extends Controller
                 }
             }
 
-            // Lưu evidence từ session (nếu có)
+            // Save evidence from session (if any)
             $evidences = session('report_evidences', []);
             foreach ($evidences as $evidence) {
                 $attachment = $evidence['attachment'] ?? null;
@@ -198,7 +199,7 @@ class ReportController extends Controller
                 }
             }
 
-            return back()->withErrors(['error' => 'Lỗi lưu dữ liệu: ' . $e->getMessage()]);
+            return back()->withErrors(['error' => 'Data save error: ' . $e->getMessage()]);
         }
     }
 
@@ -270,7 +271,7 @@ class ReportController extends Controller
         ];
         session(['report_parties' => $parties]);
 
-        // Render lại toàn bộ bảng parties (dùng view partial hoặc inline HTML)
+        // Re-render the entire parties table (using view partial or inline HTML)
         $html = view('partials.relevant_parties_table', ['parties' => $parties])->render();
         return response()->json(['success' => true, 'html' => $html]);
     }
@@ -380,7 +381,7 @@ class ReportController extends Controller
                 Storage::disk('public')->delete($attachment);
             }
 
-            return back()->withErrors(['error' => 'Lỗi cập nhật thông tin: ' . $e->getMessage()]);
+            return back()->withErrors(['error' => 'Update information error: ' . $e->getMessage()]);
         }
     }
 
@@ -456,7 +457,7 @@ class ReportController extends Controller
                 Storage::disk('public')->delete($attachment);
             }
 
-            return back()->withErrors(['error' => 'Lỗi cập nhật bằng chứng: ' . $e->getMessage()]);
+            return back()->withErrors(['error' => 'Evidence update error: ' . $e->getMessage()]);
         }
     }
 

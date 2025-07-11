@@ -1,7 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.app.app')
 @section('title', 'Add Initial Evidence')
 @section('content')
- <div class="container mt-5">
+    <div class="container mt-5">
         <div class="row text-center mb-4">
             <h3>Initial Evidence</h3>
             <p class="fst-italic mb-4">This form used to document the initial evidence connected to the incident.</p>
@@ -15,9 +15,9 @@
                         <select class="form-select" id="evidence" name="evidence" required>
                             <option value="">Select an option</option>
                             @if (count($allReport) > 0)
-                            @foreach ($allReport as $report)
-                                <option value="{{$report->report_id}}">{{$report->type_report}}</option>
-                             @endforeach
+                                @foreach ($allReport as $report)
+                                    <option value="{{ $report->report_id }}">{{ $report->type_report }}</option>
+                                @endforeach
                             @endif
                         </select>
                     </div>
@@ -74,4 +74,4 @@
             </div>
         </form>
     </div>
-@endsection 
+@endsection

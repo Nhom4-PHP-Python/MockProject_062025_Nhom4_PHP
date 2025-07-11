@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app.app')
 @section('title', __('messages.crime_report_step2'))
 @section('content')
     <div class="container">
@@ -119,8 +119,8 @@
                         </tbody>
                     </table>
                     <div class="text-end">
-                        <button type="button" style="width: 100px;" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
-                            data-bs-target="#relevantPartyModal">{{ __('messages.add') }}</button>
+                        <button type="button" style="width: 100px;" class="btn btn-outline-secondary btn-sm"
+                            data-bs-toggle="modal" data-bs-target="#relevantPartyModal">{{ __('messages.add') }}</button>
                     </div>
                 </div>
 
@@ -172,14 +172,15 @@
                         </tbody>
                     </table>
                     <div class="text-end">
-                        <button type="button" style="width: 100px;" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
+                        <button type="button" style="width: 100px;" class="btn btn-outline-secondary btn-sm"
+                            data-bs-toggle="modal"
                             data-bs-target="#initialEvidenceModal">{{ __('messages.add') }}</button>
                     </div>
                 </div>
 
                 <div class="d-flex justify-content-end mt-4">
-                    <a href="{{ route('report.step1') }}"
-                        class="btn btn-outline-secondary me-2" style="width: 150px;">{{ __('messages.back') }}</a>
+                    <a href="{{ route('report.step1') }}" class="btn btn-outline-secondary me-2"
+                        style="width: 150px;">{{ __('messages.back') }}</a>
                     <button type="button" class="btn btn-dark" style="width: 150px;"
                         id="confirmMainSubmit">{{ __('messages.submit') }}</button>
                 </div>

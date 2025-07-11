@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app.app')
 @section('title', 'Add Relevant Party')
 @section('content')
 <div class="container">

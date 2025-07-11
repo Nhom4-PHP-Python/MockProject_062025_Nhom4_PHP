@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app.app')
 @section('title', __('messages.nypd_crime_report_home'))
 @section('content')
     <div class="container mt-4">
