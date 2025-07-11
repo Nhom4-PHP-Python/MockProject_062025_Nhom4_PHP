@@ -36,4 +36,21 @@ class Report extends Model
         return $this->belongsToMany(Witness::class, 'report_witnesses', 'report_id', 'witness_id')
                     ->withPivot('is_deleted');
     }
+    public function suspects()
+    {
+        return $this->belongsToMany(Suspect::class, 'report_suspects', 'report_id', 'suspect_id')
+                    ->withPivot('is_deleted')
+                    ->wherePivot('is_deleted', 0);
+    }
+
+    public function accomplices()
+    {
+        return $this->belongsToMany(Accomplice::class, 'report_accomplices', 'report_id', 'accomplice_id')
+                    ->withPivot('is_deleted');
+    }
+    public function evidences()
+    {
+        return $this->hasMany(Evidence::class, 'report_id', 'report_id')
+                    ->where('is_deleted', 0);
+    }
 }

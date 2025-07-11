@@ -25,12 +25,12 @@
     <!-- Top Info -->
     <div class="d-flex justify-content-between text-muted mb-3 mt-4">
       <div class="col-md-6">
-        <div ><strong>ReportID:</strong></div>
-        <div><strong>Status:</strong></div>
+        <div ><strong>ReportID: {{ $reports->report_id }}</strong></div>
+        <div><strong>Status: {{ $reports->status }}</strong></div>
       </div>
       <div class="col-md-6">
-        <div><strong>Date:</strong></div>
-        <div><strong>Time:</strong></div>
+       <div><strong>Date: {{ \Carbon\Carbon::parse($reports->reported_at)->format('Y-m-d') }}</strong></div>
+        <div><strong>Time: {{ \Carbon\Carbon::parse($reports->reported_at)->format('H:i:s') }}</strong></div>
       </div>
     </div>
     
@@ -44,15 +44,15 @@
     <div class="mt-4">
       <div class="fw-bold text-danger">MY INFORMATION</div>
       <div class="row mt-3">
-        <div class="col-md-6">Full name</div>
-        <div class="col-md-6">Email</div>
+        <div class="col-md-6">Full name:  {{ $reports->reporter_fullname }}</div>
+        <div class="col-md-6">Email:  {{ $reports->reporter_email }}</div>
       </div>
       <div class="row mt-3">
-        <div class="col-md-6">Relationship to the incident</div>
-        <div class="col-md-6">Phone</div>
+        <div class="col-md-6">Relationship to the incident:  {{ $reports->type_report }}</div>
+        <div class="col-md-6">Phone:  {{ $reports->reporter_phonenumber }}</div>
       </div>
       <div class="row mt-3">
-        <div class="col-md-6">Address</div>
+        <div class="col-md-6">Address:  {{ $reports->case_location }}</div>
       </div>
     </div>
 
@@ -62,16 +62,16 @@
     <div>
       <div class="fw-bold text-danger">INCIDENT INFORMATION</div>
       <div class="row mt-3">
-        <div class="col-md-6">Type of Crime</div>
-        <div class="col-md-6">Severity</div>
+        <div class="col-md-6">Type of Crime: {{ $reports->type_report }}</div>
+        <div class="col-md-6">Severity: {{ $reports->type_report  }}</div>
       </div>
       <div class="row mt-3">
-        <div class="col-md-6">Date</div>
-        <div class="col-md-6">State</div>
+        <div class="col-md-6">Date: {{ $reports->reported_at }}</div>
+        <div class="col-md-6">State: {{ $reports->status }}</div>
       </div>
       <div class="row mt-3">
-        <div class="col-md-6">Detailed address</div>
-        <div class="col-md-6">Description of the incident</div>
+        <div class="col-md-6">Detailed address: {{ $reports->case_location }}</div>
+        <div class="col-md-6">Description of the incident: {{ $reports->description }}</div>
       </div>
     </div>
   </div>

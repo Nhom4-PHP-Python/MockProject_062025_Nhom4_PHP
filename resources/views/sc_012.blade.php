@@ -129,52 +129,34 @@
           <td>New York, NY</td>
           <td><span class="status-badge badge-new d-block w-100 text-center py-2">New Case</span></td>
         </tr>
-        <tr>
-          <td>#20462</td>
-          <td>Violent Crimes</td>
-          <td>3rd Degree Felony</td>
-          <td>13/05/2022</td>
-          <td>ToLin</td>
-          <td>Chicago, IL</td>
-          <td><span class="status-badge badge-new d-block w-100 text-center py-2">New Case</span></td>
-        </tr>
-        <tr>
-          <td>#45169</td>
-          <td>Drug Offenses</td>
-          <td>3rd Degree Felony</td>
-          <td>15/06/2022</td>
-          <td>Den</td>
-          <td>San Francisco, CA</td>
-          <td><span class="status-badge badge-phase d-block w-100 text-center py-2">Processing in phase 2</span></td>
-        </tr>
-        <tr>
-          <td>#34304</td>
-          <td>Cybercrimes</td>
-          <td>2nd Degree Felony</td>
-          <td>06/09/2022</td>
-          <td>Vau</td>
-          <td>Chicago, IL</td>
-          <td><span class="status-badge badge-new d-block w-100 text-center py-2">New Case</span></td>
-        </tr>
-        <tr>
-          <td>#17188</td>
-          <td>Drug Offenses</td>
-          <td>Misdemeanor</td>
-          <td>25/09/2022</td>
-          <td>Thai</td>
-          <td>Seattle, WA</td>
-          <td><span class="status-badge badge-pending d-block w-100 text-center py-2">Pending approve in phase 3</span></td>
-        </tr>
-        <tr>
-          <td>#73003</td>
-          <td>Property Crimes</td>
-          <td>Misdemeanor</td>
-          <td>04/10/2022</td>
-          <td>Subo</td>
-          <td>Seattle, WA</td>
-          <td><span class="status-badge badge-phase d-block w-100 text-center py-2">Processing in phase 2</span></td>
-        </tr>
-        <!-- Add more rows if needed -->
+        @foreach ($reports as $report)
+            <tr>
+                <td>{{ $report->report_id }}</td>
+                <td>{{ $report->type_report }}</td>
+                <td>{{ $report->type_report }}</td>
+                <td>{{ $report->reported_at }}</td>
+                <td>{{ $report->description }}</td>
+                <td>{{ $report->case_location }}</td>
+                {{-- <td><span class="status-badge badge-new d-block w-100 text-center py-2">New Case</span></td> --}}
+                   <td>
+                      @php
+                          $status = $report->status;
+                          $badgeClass = '';
+
+                          if ($status === 'Rejected') {
+                              $badgeClass = 'badge-new';
+                          } elseif ($status === 'Pending') {
+                              $badgeClass = 'badge-pending';
+                          } elseif ($status === 'Approved') {
+                              $badgeClass = 'badge-phase';
+                          }
+                      @endphp
+
+                      <span class="status-badge d-block w-100 text-center py-2  {{ $badgeClass }} ">{{ $status }}</span>
+                  </td>
+                </tr>
+        @endforeach
+
       </tbody>
     </table>
   </div>

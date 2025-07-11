@@ -26,12 +26,12 @@
     <!-- Top Info -->
     <div class="d-flex justify-content-between mb-3 mt-4">
       <div class="col-md-6" >
-        <div><strong>ReportID:</strong></div>
-        <div><strong>Status:</strong></div>
+        <div><strong>ReportID: {{ $reports->report_id }}</strong></div>
+        <div><strong>Status: {{ $reports->status }}</strong></div>
       </div>
       <div class="col-md-6">
-        <div><strong>Date:</strong></div>
-        <div><strong>Time:</strong></div>
+         <div><strong>Date: {{ \Carbon\Carbon::parse($reports->reported_at)->format('Y-m-d') }}</strong></div>
+        <div><strong>Time: {{ \Carbon\Carbon::parse($reports->reported_at)->format('H:i:s') }}</strong></div>
       </div>
     </div>
 
@@ -44,15 +44,15 @@
     <div class="mt-4">
       <h6 class="text-danger fw-bold">MY INFORMATION</h6>
       <div class="row mb-2">
-        <div class="col-md-6 fw-medium">Full name</div>
-        <div class="col-md-6 fw-medium">Email</div>
+        <div class="col-md-6 fw-medium">Full name: {{ $reports->reporter_fullname }}</div>
+        <div class="col-md-6 fw-medium">Email:  {{ $reports->reporter_email }}</div>
       </div>
       <div class="row mb-2">
-        <div class="col-md-6 fw-medium">Relationship to the incident</div>
-        <div class="col-md-6 fw-medium">Phone</div>
+        <div class="col-md-6 fw-medium">Relationship to the incident:  {{ $reports->type_report }}</div>
+        <div class="col-md-6 fw-medium">Phone:  {{ $reports->reporter_phonenumber }}</div>
       </div>
       <div class="row mb-2">
-        <div class="col-md-6 fw-medium">Address</div>
+        <div class="col-md-6 fw-medium">Address:  {{ $reports->case_location }}</div>
       </div>
     </div>
 
@@ -62,40 +62,21 @@
     <div class="mt-4">
       <h6 class="text-danger fw-bold">INCIDENT INFORMATION</h6>
       <div class="row mb-2">
-        <div class="col-md-6 fw-medium">Type of Crime</div>
-        <div class="col-md-6 fw-medium">Severity</div>
+        <div class="col-md-6 fw-medium">Type of Crime: {{ $reports->type_report }}</div>
+        <div class="col-md-6 fw-medium">Severity: {{ $reports->type_report  }}</div>
       </div>
       <div class="row mb-2">
-        <div class="col-md-6 fw-medium">Datetime of occurrence</div>
-        <div class="col-md-6 fw-medium">State</div>
+        <div class="col-md-6 fw-medium">Datetime of occurrence: {{ $reports->reported_at }}</div>
+        <div class="col-md-6 fw-medium">State: {{ $reports->status }}</div>
       </div>
       <div class="row mb-2">
-        <div class="col-md-6 fw-medium">Detailed address</div>
-        <div class="col-md-6 fw-medium">Description of the incident</div>
+        <div class="col-md-6 fw-medium">Detailed address: {{ $reports->case_location }}</div>
+        <div class="col-md-6 fw-medium">Description of the incident: {{ $reports->description }}</div>
       </div>
     </div>
   </div>
   <div>
 
-{{-- @if(isset($reports) && count($reports) > 0)
-    <h3>Danh sách báo cáo cho Case ID: {{ $caseId }}</h3>
-    <ul>
-        @foreach ($reports as $report)
-            <li>{{ $report->type_report }} </li>
-            <li> {{ $report->description }}</li>
-            <li> {{ $report->case_location }}</li>
-            <li> {{ $report->reported_at }}</li>
-            <li> {{ $report->reporter_fullname }}</li>
-            <li> {{ $report->reporter_email }}</li>
-            <li> {{ $report->reporter_phonenumber }}</li>
-            <li> {{ $report->status }}</li>
-            <li> {{ $report->officer_approve_username }}</li>
-            <li> {{ $report->is_deleted }}</li>
-        @endforeach
-    </ul>
-@elseif(isset($caseId))
-    <p>Không tìm thấy báo cáo nào cho Case ID: {{ $caseId }}</p>
-@endif --}}
 
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

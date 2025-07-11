@@ -30,4 +30,10 @@ class Suspect extends Model
         'health_status',
         'is_deleted',
     ];
+    public function reports()
+    {
+        return $this->belongsToMany(Report::class, 'report_suspects', 'suspect_id', 'report_id')
+                    ->withPivot('is_deleted')
+                    ->wherePivot('is_deleted', 0);
+    }
 }

@@ -10,12 +10,13 @@ class Sc007Controller extends Controller
 
     public function index(Request $request)
     {
-        $caseId = 1;
-        //  $request->input('case_id'); // ?case_id=...
-        // $reports = [];
+    $caseId = 1;
+    $reportId = 1;
+    $reports = [];
 
         if ($caseId) {
-            $reports = Report::where('case_id', $caseId)->where('is_deleted', 0)->get();
+            // $reports = Report::where('case_id', $caseId)->where('is_deleted', 0)->get();
+                $reports = Report::find($reportId);
         }
 
         return view('sc_007', compact('reports', 'caseId'));

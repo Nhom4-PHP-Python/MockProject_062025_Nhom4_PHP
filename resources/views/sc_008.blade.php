@@ -25,6 +25,7 @@
 
 <body class="bg-white text-dark">
 
+
   <!-- Header -->
   <div class="d-flex justify-content-between align-items-center p-2 border-bottom bg-light">
     <i class="fa-solid fa-arrow-left"></i>
@@ -37,16 +38,19 @@
 
   <div class="container py-4">
     <!-- Top Info -->
+      <!-- Top Info -->
     <div class="d-flex justify-content-between text-muted mb-3 mt-4">
       <div class="col-md-6">
-        <div ><strong>ReportID:</strong></div>
-        <div><strong>Status:</strong></div>
+        <div ><strong>ReportID: {{ $reports->report_id }}</strong></div>
+        <div><strong>Status: {{ $reports->status }}</strong></div>
       </div>
       <div class="col-md-6">
-        <div><strong>Date:</strong></div>
-        <div><strong>Time:</strong></div>
+        <div><strong>Date: {{ \Carbon\Carbon::parse($reports->reported_at)->format('Y-m-d') }}</strong></div>
+        <div><strong>Time: {{ \Carbon\Carbon::parse($reports->reported_at)->format('H:i:s') }}</strong></div>
       </div>
     </div>
+
+
 
     <hr />
     <h5 class="text-center fw-bold">REPORT DETAIL</h5>
@@ -55,26 +59,25 @@
     <div class="mt-4">
       <h6 class="text-danger fw-bold">MY INFORMATION</h6>
       <div class="row">
-        <div class="col-md-6">Full name</div>
-        <div class="col-md-6">Email</div>
-        <div class="col-md-6 mt-2">Relationship to the incident</div>
-        <div class="col-md-6 mt-2">Phone</div>
-        <div class="col-md-6 mt-2">Address</div>
+        <div class="col-md-6">Full name:  {{ $reports->reporter_fullname }}</div>
+        <div class="col-md-6">Email:  {{ $reports->reporter_email }}</div>
+        <div class="col-md-6 mt-2">Relationship to the incident:  {{ $reports->type_report }}</div>
+        <div class="col-md-6 mt-2">Phone:  {{ $reports->reporter_phonenumber }}</div>
+        <div class="col-md-6 mt-2">Address:  {{ $reports->case_location }}</div>
       </div>
     </div>
-
     <hr />
 
     <!-- Incident Information -->
     <div class="mt-4">
       <h6 class="text-danger fw-bold">INCIDENT INFORMATION</h6>
       <div class="row">
-        <div class="col-md-6">Type of Crime</div>
-        <div class="col-md-6">Severity</div>
-        <div class="col-md-6 mt-2">Datetime of occurrence</div>
-        <div class="col-md-6 mt-2">State</div>
-        <div class="col-md-6 mt-2">Detailed address</div>
-        <div class="col-md-6 mt-2">Description of the incident</div>
+        <div class="col-md-6">Type of Crime: {{ $reports->type_report }}</div>
+        <div class="col-md-6">Severity: {{ $reports->type_report  }}</div>
+        <div class="col-md-6 mt-2">Datetime of occurrence: {{ $reports->reported_at }}</div>
+        <div class="col-md-6 mt-2">State: {{ $reports->status }}</div>
+        <div class="col-md-6 mt-2">Detailed address: {{ $reports->case_location }}</div>
+        <div class="col-md-6 mt-2">Description of the incident: {{ $reports->description }}</div>
       </div>
     </div>
 
@@ -99,9 +102,15 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>01</td><td>---</td><td>---</td><td>---</td><td>---</td>
-            </tr>
+            @foreach($victims as $victim)
+                <tr>
+                   <td>{{ $victim->victim_id }}</td>
+                    <td>{{ $victim->fullname }}</td>
+                    <td>{{ $victim->gender }}</td>
+                    <td>{{ $victim->nationality }}</td>
+                    <td>{{ $victim->description }}</td>
+                </tr>
+            @endforeach
           </tbody>
         </table>
       </div>
@@ -116,7 +125,15 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>02</td><td>---</td><td>---</td><td>---</td><td>---</td></tr>
+              @foreach($witnesses as $witness)
+                <tr>
+                     <td>{{ $witness->witness_id }}</td>
+                    <td>{{ $witness->fullname }}</td>
+                    <td>{{ $witness->gender }}</td>
+                    <td>{{ $witness->nationality }}</td>
+                    <td>{{ $witness->description }}</td>
+                </tr>
+            @endforeach
           </tbody>
         </table>
       </div>
@@ -128,7 +145,17 @@
           <thead class="table-light">
             <tr><th>ID</th><th>Full Name</th><th>Gender</th><th>Nationality</th><th>Statement / Description</th></tr>
           </thead>
-          <tbody><tr><td>03</td><td>---</td><td>---</td><td>---</td><td>---</td></tr></tbody>
+          <tbody>
+             @foreach($suspects as $suspect)
+                <tr>
+                   <td>{{ $suspect->suspect_id }}</td>
+                    <td>{{ $suspect->fullname }}</td>
+                    <td>{{ $suspect->gender }}</td>
+                    <td>{{ $suspect->nationality }}</td>
+                    <td>{{ $suspect->description }}</td>
+                </tr>
+            @endforeach
+          </tbody>
         </table>
       </div>
 
@@ -139,7 +166,17 @@
           <thead class="table-light">
             <tr><th>ID</th><th>Full Name</th><th>Gender</th><th>Nationality</th><th>Statement / Description</th></tr>
           </thead>
-          <tbody><tr><td>04</td><td>---</td><td>---</td><td>---</td><td>---</td></tr></tbody>
+          <tbody>
+             @foreach($accomplices as $accomplice)
+                <tr>
+                   <td>{{ $accomplice->accomplice_id }}</td>
+                    <td>{{ $accomplice->fullname }}</td>
+                    <td>{{ $accomplice->gender }}</td>
+                    <td>{{ $accomplice->nationality }}</td>
+                    <td>{{ $accomplice->description }}</td>
+                </tr>
+            @endforeach
+          </tbody>
         </table>
       </div>
 
@@ -152,7 +189,16 @@
           </thead>
           <tbody>
             <tr>
-              <td>01</td><td>Documentary</td><td>Location example</td><td>File Title.png</td><td>File Title.png</td>
+                @foreach($evidences as $evidence)
+                <tr>
+                   <td>{{ $evidence->evidence_id }}</td>
+                    <td>{{ $evidence->initial_condition }}</td>
+                    <td>{{ $evidence->location_at_scene }}</td>
+                    <td>{{ $evidence->detailed_description }}</td>
+                    <td>{{ $evidence->attached_file }}</td>
+                </tr>
+            @endforeach
+
             </tr>
           </tbody>
         </table>
