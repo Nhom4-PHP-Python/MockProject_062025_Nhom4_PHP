@@ -50,7 +50,7 @@ class SearchController extends Controller
             ];
         }
 
-        return view('search-results', compact('results', 'query'));
+        return view('search_result', compact('results', 'query'));
     }
 
     /**

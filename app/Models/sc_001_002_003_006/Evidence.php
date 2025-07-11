@@ -14,15 +14,17 @@ class Evidence extends Model
         'measure_survey_id',
         'warrant_result_id',
         'report_id',
-        'collected_by',
-        'analyzed_by',
+        'collector_username',
+        'case_id',
         'description',
-        'collected_at',
-        'current_location',
+        'detailed_description',
+        'date_collected',
+        'initial_condition',
         'attached_file',
         'status',
         'is_deleted',
-        'case_id'
+        'preservation_measures',
+        'location_at_scene'
     ];
 
     public function report()

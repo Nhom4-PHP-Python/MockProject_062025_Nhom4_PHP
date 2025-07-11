@@ -47,10 +47,11 @@ class ReportController extends Controller
         $step1 = session('report_step1');
         if (!$step1) return redirect()->route('report.step1');
         $validated = $request->validate([
-            'description' => 'nullable|string|max:1000',
-            'incident_datetime' => 'required|date',
+            'type_of_crime' => 'required|string',
             'severity' => 'required|string',
-            'type_report' => 'required|string',
+            'incident_datetime' => 'required|date',
+            'detailed_address' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:1000',
         ]);
 
         if (!$step1) {
@@ -65,11 +66,10 @@ class ReportController extends Controller
                 'reporter_fullname' => $step1['reporter_fullname'],
                 'reporter_email' => $step1['reporter_email'],
                 'reporter_phonenumber' => $step1['reporter_phonenumber'],
-                'type_report' => $step1['type_report'],
-                'case_location' => $step1['case_location'] ?? null,
+                'type_report' => $request->type_of_crime,
+                'case_location' => $request->detailed_address ?? $step1['case_location'] ?? null,
                 'description' => $request->description,
                 'reported_at' => $request->incident_datetime,
-                'officer_approve_id' => null,
                 'is_deleted' => 0,
             ]);
 
@@ -83,10 +83,12 @@ class ReportController extends Controller
                 Party::create([
                     'report_id' => $report->report_id,
                     'fullname' => $party['fullname'] ?? null,
+                    'relationship' => $party['relationship'] ?? '',
+                    'gender' => $party['gender'] ?? null,         // Thêm dòng này
+                    'nationality' => $party['nationality'] ?? null, // Thêm dòng này
                     'contact' =>  null,
                     'statement' =>  $party['statement'] ?? null,
-                    'is_deleted' => 0,
-                    // If there are other fields like relationship, gender, nationality, add them here if DB has them
+                    // If there are other fields like gender, nationality, add them here if DB has them
                 ]);
             }
 
@@ -109,10 +111,12 @@ class ReportController extends Controller
                     }
                     Party::create([
                         'report_id' => $report->report_id,
-                        'fullname' => $party_names[$i] ?? null,
+                        'fullname' => $party['fullname'] ?? null,
+                        'relationship' => $party['relationship'] ?? '',
+                        'gender' => $party['gender'] ?? null,
+                        'nationality' => $party['nationality'] ?? null,
                         'contact' =>  null,
-                        'statement' =>  $party_statements[$i] ?? null,
-                        'is_deleted' => 0,
+                        'statement' =>  $party['statement'] ?? null,
                     ]);
                 }
             }
@@ -138,8 +142,9 @@ class ReportController extends Controller
 
                     Evidence::create([
                         'report_id' => $report->report_id,
-                        'description' => $evidence_descriptions[$i] ?? null,
-                        'current_location' => $evidence_locations[$i] ?? null,
+                        'detailed_description' => $evidence['detailed_description'] ?? null,
+                        'date_collected' => $evidence['date_collected'] ?? null,
+                        'location_at_scene' => $evidence['location'] ?? null,
                         'attached_file' => $attachment,
                         'status' => 'Pending',
                         'is_deleted' => 0,
@@ -157,13 +162,24 @@ class ReportController extends Controller
                     $uploadedFiles[] = $attachment;
                 }
                 Evidence::create([
+                    'measure_survey_id' => $report->measure_survey_id,
+                    'warrant_result_id' => $report->warrant_result_id,
                     'report_id' => $report->report_id,
+                    'collector_username' => $evidence['collector_username'] ?? null,
                     'description' => $evidence['description'] ?? null,
-                    'current_location' => $evidence['location'] ?? null,
+                    'location_at_scene' => $evidence['location'] ?? null,
                     'attached_file' => $attachment,
                     'status' => 'Pending',
+
+                    'detailed_description' => $evidence['detailed_description'] ?? null,
+                    'date_collected' => $evidence['date_collected'] ?? null,
+
+                    'attached_file' => $attachment,
+
                     'is_deleted' => 0,
+                    // custom field
                     'type' => $evidence['type'] ?? null,
+
                 ]);
             }
 
