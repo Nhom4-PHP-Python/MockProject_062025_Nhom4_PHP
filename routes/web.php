@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SC012_013_016\Sc013Controller;
 use App\Http\Controllers\SC012_013_016\Sc016Controller;
@@ -20,6 +21,9 @@ use App\Http\Controllers\ReportController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/sc_011/report/view', [\App\Http\Controllers\Sc011Controller::class, 'showReportDetail' ]);
+Route::get('/sc_011/report/form', [\App\Http\Controllers\Sc011Controller::class, 'showReportFormWithDetails' ]);
 
 Route::group(['prefix' => 'admin'], function () {
     // Route::get('/', [AdminController::class, 'index'])->name('admin.index');
