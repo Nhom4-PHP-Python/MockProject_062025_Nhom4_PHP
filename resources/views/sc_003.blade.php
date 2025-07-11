@@ -319,18 +319,19 @@
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="border-radius: 16px; max-width: 480px; margin: auto;">
-                <div class="modal-body d-flex flex-column flex-md-row align-items-center p-4" style="gap: 24px;">
-                    <div class="d-flex align-items-center justify-content-center mb-3 mb-md-0" style="min-width: 48px;">
-                        <div style="width: 12px; height: 100px; background: #b3d0ff; border-radius: 8px;"></div>
+                <div class="modal-body d-flex flex-column flex-md-row align-items-stretch p-4" style="gap: 24px;">
+                    <div class="d-flex align-items-stretch justify-content-center mb-3 mb-md-0" style="min-width: 48px;">
+                        <div style="width: 12px; top: 5px; height: 150px; background: #b3d0ff; border-radius: 8px;"></div>
                     </div>
                     <div class="flex-grow-1">
-                        <h3 class="fw-bold mb-3" style="font-size: 1.5rem;">Declaration & Confirmation</h3>
-                        <ol class="mb-4 ps-3" style="color: #222;">
+                        <h3 class="fw-bold mb-3" style="font-size: 1.5rem; text-align: left">Declaration & Confirmation
+                        </h3>
+                        <ol class="mb-4 ps-3" style="color: #222; text-align: left">
                             <li>I hereby declare that all the information provided in this report is true and accurate to
                                 the best of my knowledge.</li>
                             <li>I accept full legal responsibility for any false or misleading information submitted.</li>
                         </ol>
-                        <div class="d-flex justify-content-center gap-3 mt-2">
+                        <div class="d-flex justify-content-end gap-3 mt-2">
                             <button type="button" class="btn btn-outline-secondary px-4"
                                 data-bs-dismiss="modal">Cancel</button>
                             <button type="button" class="btn btn-dark px-4" id="finalSubmitBtn">Yes</button>
@@ -345,18 +346,20 @@
     <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body text-center py-4 px-4">
-                    <div style="font-size: 2.5rem; color: #e57373; margin-bottom: 10px;">
-                        <i class="bi bi-exclamation-triangle-fill"></i>
+            <div class="modal-content" style="border-radius: 16px; max-width: 480px; margin: auto;">
+                <div class="modal-body d-flex flex-row align-items-stretch p-4" style="gap: 24px;">
+                    <div class="d-flex align-items-stretch" style="min-width: 24px;">
+                        <div style="width: 8px; height: 50%; background: #f5bfc0; border-radius: 8px;"></div>
                     </div>
-                    <h4 class="mb-2 fw-bold" style="color: #222;">{{ __('messages.delete') }}</h4>
-                    <p style="color: #444;">{{ __('messages.delete_confirmation_message') }}</p>
-                    <div class="d-flex justify-content-center gap-2 mt-3">
-                        <button type="button" class="btn btn-outline-secondary px-4"
-                            data-bs-dismiss="modal">{{ __('messages.cancel') }}</button>
-                        <button type="button" class="btn btn-danger px-4"
-                            id="confirmDeleteBtn">{{ __('messages.confirm') }}</button>
+                    <div class="flex-grow-1 d-flex flex-column justify-content-center text-start">
+                        <h3 class="fw-bold mb-2" style="font-size: 1.5rem;">{{ __('messages.delete') }}</h3>
+                        <p class="mb-4" style="color: #444;">{{ __('messages.delete_confirmation_message') }}</p>
+                        <div class="d-flex justify-content-end gap-3 mt-2">
+                            <button type="button" class="btn btn-outline-secondary px-4"
+                                data-bs-dismiss="modal">{{ __('messages.cancel') }}</button>
+                            <button type="button" class="btn btn-dark px-4"
+                                id="confirmDeleteBtn">{{ __('messages.yes') }}</button>
+                        </div>
                     </div>
                 </div>
             </div>
