@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Sc010;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Sc009AndSc010\Report;
 use App\Models\Sc009AndSc010\Cases;
 
-class ReportController extends Controller
+class ReportSc010Controller extends Controller
 {
   public function index(Request $request)
   {

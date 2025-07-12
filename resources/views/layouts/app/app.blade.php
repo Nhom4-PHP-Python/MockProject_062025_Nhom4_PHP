@@ -21,7 +21,7 @@
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link rel="stylesheet" href="{{ asset('css/language-switcher.css') }}">
     <style>
@@ -55,48 +55,48 @@
                             <button class="language-btn" type="button">
                                 <span>
                                     @switch(app()->getLocale())
-                                        @case('en')
-                                            {{ __('messages.english') }}
-                                        @break
+                                    @case('en')
+                                    {{ __('messages.english') }}
+                                    @break
 
-                                        @case('vi')
-                                            {{ __('messages.vietnamese') }}
-                                        @break
+                                    @case('vi')
+                                    {{ __('messages.vietnamese') }}
+                                    @break
 
-                                        @case('zh')
-                                            {{ __('messages.chinese') }}
-                                        @break
+                                    @case('zh')
+                                    {{ __('messages.chinese') }}
+                                    @break
 
-                                        @case('es')
-                                            {{ __('messages.spanish') }}
-                                        @break
+                                    @case('es')
+                                    {{ __('messages.spanish') }}
+                                    @break
 
-                                        @case('fr')
-                                            {{ __('messages.french') }}
-                                        @break
+                                    @case('fr')
+                                    {{ __('messages.french') }}
+                                    @break
 
-                                        @case('de')
-                                            {{ __('messages.german') }}
-                                        @break
+                                    @case('de')
+                                    {{ __('messages.german') }}
+                                    @break
 
-                                        @case('ja')
-                                            {{ __('messages.japanese') }}
-                                        @break
+                                    @case('ja')
+                                    {{ __('messages.japanese') }}
+                                    @break
 
-                                        @case('ko')
-                                            {{ __('messages.korean') }}
-                                        @break
+                                    @case('ko')
+                                    {{ __('messages.korean') }}
+                                    @break
 
-                                        @case('it')
-                                            {{ __('messages.italian') }}
-                                        @break
+                                    @case('it')
+                                    {{ __('messages.italian') }}
+                                    @break
 
-                                        @case('ru')
-                                            {{ __('messages.russian') }}
-                                        @break
+                                    @case('ru')
+                                    {{ __('messages.russian') }}
+                                    @break
 
-                                        @default
-                                            {{ __('messages.english') }}
+                                    @default
+                                    {{ __('messages.english') }}
                                     @endswitch
                                 </span>
                                 <i class="bi bi-globe ms-1"></i>
@@ -181,17 +181,17 @@
 
         <!-- Flash Messages -->
         @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show mx-3 mt-3" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+        <div class="alert alert-success alert-dismissible fade show mx-3 mt-3" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         @endif
 
         @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show mx-3 mt-3" role="alert">
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+        <div class="alert alert-danger alert-dismissible fade show mx-3 mt-3" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         @endif
 
         <main class="container my-4">
