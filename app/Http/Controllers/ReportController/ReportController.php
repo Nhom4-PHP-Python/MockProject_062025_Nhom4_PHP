@@ -1,0 +1,497 @@
+<?php
+
+namespace App\Http\Controllers\ReportController;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\sc_001_002_003_006\Report;
+use App\Models\sc_001_002_003_006\Evidence;
+use App\Models\sc_001_002_003_006\Party;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Psy\Readline\Hoa\Console;
+
+class ReportController extends Controller
+{
+    // Step 1: Display form for entering reporter information
+    public function step1()
+    {
+        return view('sc_002');
+    }
+
+    // Step 1: Receive data, save to session, move to step 2
+    public function postStep1(Request $request)
+    {
+        $validated = $request->validate([
+            'reporter_fullname' => 'required|string|max:100',
+            'reporter_email' => 'required|email|max:100',
+            'reporter_phonenumber' => 'required|string|max:20',
+            'type_report' => 'required|string',
+        ]);
+        session(['report_step1' => $request->only(['reporter_fullname', 'reporter_email', 'reporter_phonenumber', 'type_report', 'case_location'])]);
+        return redirect()->route('report.step2');
+    }
+
+    // Step 2: Display form for entering incident information
+    public function step2()
+    {
+        $step1 = session('report_step1');
+        if (!$step1) return redirect()->route('report.step1');
+        return view('sc_003', compact('step1'));
+    }
+
+    // Step 2: Receive data, save to database, move to step 3
+    public function postStep2(Request $request)
+    {
+        $step1 = session('report_step1');
+        if (!$step1) return redirect()->route('report.step1');
+        $validated = $request->validate([
+            'type_of_crime' => 'required|string',
+            'severity' => 'required|string',
+            'incident_datetime' => 'required|date',
+            'detailed_address' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        if (!$step1) {
+            return redirect()->route('report.step1')->withErrors('Step 1 data is missing.');
+        }
+
+        DB::beginTransaction();
+        $uploadedFiles = []; // Track uploaded files for cleanup
+
+        try {
+            $report = Report::create([
+                'reporter_fullname' => $step1['reporter_fullname'],
+                'reporter_email' => $step1['reporter_email'],
+                'reporter_phonenumber' => $step1['reporter_phonenumber'],
+                'type_report' => $request->type_of_crime,
+                'case_location' => $request->detailed_address ?? $step1['case_location'] ?? null,
+                'description' => $request->description,
+                'reported_at' => $request->incident_datetime,
+                'is_deleted' => 0,
+            ]);
+
+            // Save relevant parties from session report_parties
+            $parties = session('report_parties', []);
+            foreach ($parties as $party) {
+                $attachment = $party['attachment'] ?? null;
+                if ($attachment) {
+                    $uploadedFiles[] = $attachment;
+                }
+                Party::create([
+                    'report_id' => $report->report_id,
+                    'fullname' => $party['fullname'] ?? null,
+                    'relationship' => $party['relationship'] ?? '',
+                    'gender' => $party['gender'] ?? null,         // Add this line
+                    'nationality' => $party['nationality'] ?? null, // Add this line
+                    'contact' =>  null,
+                    'statement' =>  $party['statement'] ?? null,
+                    // If there are other fields like gender, nationality, add them here if DB has them
+                ]);
+            }
+
+            // Save relevant parties to witness table (old, keep for backward compatibility)
+            if ($request->has('party_role')) {
+                $party_names = $request->party_name ?? [];
+                $party_statements = $request->party_statement ?? [];
+                $party_attachments = $request->file('party_attachment') ?? [];
+
+                foreach ($request->party_role as $i => $role) {
+                    $attachment = null;
+                    if (isset($party_attachments[$i]) && $party_attachments[$i]) {
+                        // Validate file before upload
+                        $validated = $request->validate([
+                            "party_attachment.$i" => 'file|max:10240|mimes:pdf,doc,docx,jpg,jpeg,png'
+                        ]);
+
+                        $attachment = $party_attachments[$i]->store('witness_attachments', 'public');
+                        $uploadedFiles[] = $attachment; // Track for cleanup
+                    }
+                    Party::create([
+                        'report_id' => $report->report_id,
+                        'fullname' => $party['fullname'] ?? null,
+                        'relationship' => $party['relationship'] ?? '',
+                        'gender' => $party['gender'] ?? null,
+                        'nationality' => $party['nationality'] ?? null,
+                        'contact' =>  null,
+                        'statement' =>  $party['statement'] ?? null,
+                    ]);
+                }
+            }
+
+            // Save evidence to evidences table
+            if ($request->has('evidence_type')) {
+                $evidence_locations = $request->evidence_location ?? [];
+                Log::info('Evidence locations: ', $evidence_locations);
+                $evidence_descriptions = $request->evidence_description ?? [];
+                $evidence_attachments = $request->file('evidence_attachment') ?? [];
+
+                foreach ($request->evidence_type as $i => $type) {
+                    $attachment = null;
+                    if (isset($evidence_attachments[$i]) && $evidence_attachments[$i]) {
+                        // Validate file before upload
+                        $validated = $request->validate([
+                            "evidence_attachment.$i" => 'file|max:10240|mimes:pdf,doc,docx,jpg,jpeg,png,mp4,avi'
+                        ]);
+
+                        $attachment = $evidence_attachments[$i]->store('evidence_attachments', 'public');
+                        $uploadedFiles[] = $attachment; // Track for cleanup
+                    }
+
+                    Evidence::create([
+                        'report_id' => $report->report_id,
+                        'detailed_description' => $evidence['detailed_description'] ?? null,
+                        'date_collected' => $evidence['date_collected'] ?? null,
+                        'location_at_scene' => $evidence['location'] ?? null,
+                        'attached_file' => $attachment,
+                        'status' => 'Pending',
+                        'is_deleted' => 0,
+                        // custom field
+                        'type' => $type,
+                    ]);
+                }
+            }
+
+            // Save evidence from session (if any)
+            $evidences = session('report_evidences', []);
+            foreach ($evidences as $evidence) {
+                $attachment = $evidence['attachment'] ?? null;
+                if ($attachment) {
+                    $uploadedFiles[] = $attachment;
+                }
+                Evidence::create([
+                    'measure_survey_id' => $report->measure_survey_id,
+                    'warrant_result_id' => $report->warrant_result_id,
+                    'report_id' => $report->report_id,
+                    'collector_username' => $evidence['collector_username'] ?? null,
+                    'description' => $evidence['description'] ?? null,
+                    'location_at_scene' => $evidence['location'] ?? null,
+                    'attached_file' => $attachment,
+                    'status' => 'Pending',
+
+                    'detailed_description' => $evidence['detailed_description'] ?? null,
+                    'date_collected' => $evidence['date_collected'] ?? null,
+
+                    'attached_file' => $attachment,
+
+                    'is_deleted' => 0,
+                    // custom field
+                    'type' => $evidence['type'] ?? null,
+
+                ]);
+            }
+
+            session()->forget('report_step1');
+            session()->forget('report_parties');
+            session()->forget('report_evidences');
+            DB::commit();
+            return redirect()->route('report.confirm', ['id' => $report->report_id]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            // Cleanup uploaded files if transaction failed
+            foreach ($uploadedFiles as $filePath) {
+                if (Storage::disk('public')->exists($filePath)) {
+                    Storage::disk('public')->delete($filePath);
+                }
+            }
+
+            return back()->withErrors(['error' => 'Data save error: ' . $e->getMessage()]);
+        }
+    }
+
+    // Step 3: Confirmation
+    public function confirm($id)
+    {
+        $report = Report::findOrFail($id);
+        return view('sc_006', compact('report'));
+    }
+
+    // Display form to create new relevant party (sc_004)
+    // public function createParty()
+    // {
+    //     return view('sc_004');
+    // }
+    // Save relevant party to session and return to step2
+    public function storeParty(Request $request)
+    {
+        Log::info('storeParty called', $request->all());
+
+        $validated = $request->validate([
+            'fullname' => 'required|string|max:100',
+            'relationship' => 'required|string',
+            'gender' => 'nullable|string',
+            'nationality' => 'nullable|string',
+            'statement' => 'nullable|string',
+        ]);
+
+        Log::info('Validation passed', $validated);
+
+        $parties = session('report_parties', []);
+
+        $parties[] = [
+            'fullname' => $validated['fullname'],
+            'relationship' => $validated['relationship'],
+            'gender' => $validated['gender'] ?? '',
+            'nationality' => $validated['nationality'] ?? '',
+            'statement' => $validated['statement'] ?? '',
+        ];
+
+        session(['report_parties' => $parties]);
+
+        Log::info('Parties saved to session', $parties);
+
+        return redirect()->route('report.step2')->with('success', __('messages.party_added'));
+    }
+
+    public function storePartyAjax(Request $request)
+    {
+        if (!$request->ajax()) {
+            return response()->json(['success' => false, 'message' => 'Invalid request'], 400);
+        }
+
+        $validated = $request->validate([
+            'fullname' => 'required|string|max:100',
+            'relationship' => 'required|string',
+            'gender' => 'nullable|string',
+            'nationality' => 'nullable|string',
+            'statement' => 'nullable|string',
+        ]);
+
+        $parties = session('report_parties', []);
+        $parties[] = [
+            'fullname' => $validated['fullname'],
+            'relationship' => $validated['relationship'],
+            'gender' => $validated['gender'] ?? '',
+            'nationality' => $validated['nationality'] ?? '',
+            'statement' => $validated['statement'] ?? '',
+        ];
+        session(['report_parties' => $parties]);
+
+        // Re-render the entire parties table (using view partial or inline HTML)
+        $html = view('partials.relevant_parties_table', ['parties' => $parties])->render();
+        return response()->json(['success' => true, 'html' => $html]);
+    }
+    // Display form to create new initial evidence (sc_005)
+    // public function createEvidence()
+    // {
+    //     return view('sc_005');
+    // }
+    // Save initial evidence to session and return to step2
+    public function storeEvidence(Request $request)
+    {
+        Log::info('storeEvidence called', $request->all());
+
+        $validated = $request->validate([
+            'type' => 'required|string',
+            'location' => 'nullable|string',
+            'description' => 'nullable|string',
+            'attachments' => 'nullable|array',
+            'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
+        ]);
+
+        Log::info('Evidence validation passed', $validated);
+
+        $evidences = session('report_evidences', []);
+
+        // Handle file upload
+        $attachment = null;
+        if ($request->hasFile('attachments')) {
+            $files = $request->file('attachments');
+            $uploadedFiles = [];
+
+            foreach ($files as $file) {
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $path = $file->storeAs('evidence', $filename, 'public');
+                $uploadedFiles[] = $path;
+            }
+
+            // If there are multiple files, save the first file to attachment
+            $attachment = $uploadedFiles[0] ?? null;
+        }
+
+        $evidences[] = [
+            'type' => $validated['type'],
+            'location' => $validated['location'] ?? '',
+            'description' => $validated['description'] ?? '',
+            'attachment' => $attachment,
+        ];
+
+        session(['report_evidences' => $evidences]);
+
+        Log::info('Evidence saved to session', $evidences);
+
+        return redirect()->route('report.step2')->with('success', __('messages.evidence_added'));
+    }
+
+    // Display form to edit relevant party
+    public function editParty($idx)
+    {
+        $parties = session('report_parties', []);
+        if (!isset($parties[$idx])) {
+            return redirect()->route('report.step2')->withErrors('Party not found.');
+        }
+        $party = $parties[$idx];
+        return view('sc_004', compact('party', 'idx'));
+    }
+
+    // Update relevant party
+    public function updateParty(Request $request, $idx)
+    {
+        $parties = session('report_parties', []);
+        if (!isset($parties[$idx])) {
+            return redirect()->route('report.step2')->withErrors('Party not found.');
+        }
+
+        $validated = $request->validate([
+            'relationship' => 'required|string',
+            'fullname' => 'required|string',
+            'statement' => 'nullable|string',
+            'party_attachment' => 'nullable|file|max:10240|mimes:pdf,doc,docx,jpg,jpeg,png',
+        ]);
+
+        $oldAttachment = $parties[$idx]['attachment'] ?? null;
+        $attachment = $oldAttachment;
+
+        try {
+            if ($request->hasFile('party_attachment')) {
+                $attachment = $request->file('party_attachment')->store('witness_attachments', 'public');
+
+                // Delete old file if upload successful
+                if ($oldAttachment && Storage::disk('public')->exists($oldAttachment)) {
+                    Storage::disk('public')->delete($oldAttachment);
+                }
+            }
+
+            $parties[$idx] = [
+                'relationship' => $validated['relationship'],
+                'fullname' => $validated['fullname'],
+                'statement' => $validated['statement'] ?? null,
+                'attachment' => $attachment,
+            ];
+
+            session(['report_parties' => $parties]);
+            return redirect()->route('report.step2');
+        } catch (\Exception $e) {
+            // Cleanup new uploaded file if something goes wrong, keep old file
+            if ($attachment !== $oldAttachment && Storage::disk('public')->exists($attachment)) {
+                Storage::disk('public')->delete($attachment);
+            }
+
+            return back()->withErrors(['error' => 'Update information error: ' . $e->getMessage()]);
+        }
+    }
+
+    // Delete relevant party
+    public function deleteParty($idx)
+    {
+        $parties = session('report_parties', []);
+        if (isset($parties[$idx])) {
+            // Delete associated file if exists
+            $attachment = $parties[$idx]['attachment'] ?? null;
+            if ($attachment && Storage::disk('public')->exists($attachment)) {
+                Storage::disk('public')->delete($attachment);
+            }
+
+            unset($parties[$idx]);
+            $parties = array_values($parties); // reindex
+            session(['report_parties' => $parties]);
+        }
+        return redirect()->route('report.step2');
+    }
+
+    // Display form to edit evidence
+    public function editEvidence($idx)
+    {
+        $evidences = session('report_evidences', []);
+        if (!isset($evidences[$idx])) {
+            return redirect()->route('report.step2')->withErrors('Evidence not found.');
+        }
+        $evidence = $evidences[$idx];
+        return view('sc_005', compact('evidence', 'idx'));
+    }
+
+    // Update evidence
+    public function updateEvidence(Request $request, $idx)
+    {
+        $evidences = session('report_evidences', []);
+        if (!isset($evidences[$idx])) {
+            return redirect()->route('report.step2')->withErrors('Evidence not found.');
+        }
+
+        $validated = $request->validate([
+            'evidence_type' => 'required|string',
+            'evidence_location' => 'nullable|string',
+            'evidence_description' => 'nullable|string',
+            'evidence_attachment' => 'nullable|file|max:10240|mimes:pdf,doc,docx,jpg,jpeg,png,mp4,avi',
+        ]);
+
+        $oldAttachment = $evidences[$idx]['attachment'] ?? null;
+        $attachment = $oldAttachment;
+
+        try {
+            if ($request->hasFile('evidence_attachment')) {
+                $attachment = $request->file('evidence_attachment')->store('evidence_attachments', 'public');
+
+                // Delete old file if upload successful
+                if ($oldAttachment && Storage::disk('public')->exists($oldAttachment)) {
+                    Storage::disk('public')->delete($oldAttachment);
+                }
+            }
+
+            $evidences[$idx] = [
+                'type' => $validated['evidence_type'],
+                'location' => $validated['evidence_location'],
+                'description' => $validated['evidence_description'],
+                'attachment' => $attachment,
+            ];
+
+            session(['report_evidences' => $evidences]);
+            return redirect()->route('report.step2');
+        } catch (\Exception $e) {
+            // Cleanup new uploaded file if something goes wrong, keep old file
+            if ($attachment !== $oldAttachment && Storage::disk('public')->exists($attachment)) {
+                Storage::disk('public')->delete($attachment);
+            }
+
+            return back()->withErrors(['error' => 'Evidence update error: ' . $e->getMessage()]);
+        }
+    }
+
+    // Delete evidence
+    public function deleteEvidence($idx)
+    {
+        $evidences = session('report_evidences', []);
+        if (isset($evidences[$idx])) {
+            // Delete associated file if exists
+            $attachment = $evidences[$idx]['attachment'] ?? null;
+            if ($attachment && Storage::disk('public')->exists($attachment)) {
+                Storage::disk('public')->delete($attachment);
+            }
+
+            unset($evidences[$idx]);
+            $evidences = array_values($evidences); // reindex
+            session(['report_evidences' => $evidences]);
+        }
+        return redirect()->route('report.step2');
+    }
+
+    // Step 3: Display confirmation information
+    public function step3()
+    {
+        $reportId = session('report_step1.report_id');
+        if (!$reportId) {
+            return redirect()->route('report.step1');
+        }
+
+        $report = Report::find($reportId);
+        if (!$report) {
+            return redirect()->route('report.step1')->withErrors('Report not found.');
+        }
+
+        return view('sc_006', compact('report'));
+    }
+}

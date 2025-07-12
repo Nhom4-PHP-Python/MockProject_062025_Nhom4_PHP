@@ -1,0 +1,6 @@
+[33ma05bde7[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: checkout: moving from main to main
+[33ma05bde7[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{1}: reset: moving to HEAD~1
+[33m80a96c5[m HEAD@{2}: commit (amend): sc_001+sc_002+sc_003+sc_006
+[33m0289687[m[33m ([m[1;31morigin/SC_009+010/PhamTanHoa[m[33m)[m HEAD@{3}: checkout: moving from SC_001+002+003+006/NGOVANBAO to main
+[33mac34305[m[33m ([m[1;31morigin/SC_001+002+003+006/NGOVANBAO[m[33m, [m[1;32mmaster[m[33m, [m[1;32mSC_001+002+003+006/NGOVANBAO[m[33m)[m HEAD@{4}: checkout: moving from master to SC_001+002+003+006/NGOVANBAO
+[33mac34305[m[33m ([m[1;31morigin/SC_001+002+003+006/NGOVANBAO[m[33m, [m[1;32mmaster[m[33m, [m[1;32mSC_001+002+003+006/NGOVANBAO[m[33m)[m HEAD@{5}: commit (initial): Ngo Van Bao

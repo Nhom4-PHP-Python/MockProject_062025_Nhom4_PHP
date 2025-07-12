@@ -1,0 +1,751 @@
+.header-nyc-logo {
+    font-family: "Arial Black", Arial, sans-serif;
+    letter-spacing: -0.1em;
+}
+
+.header-nyc-title {
+    font-size: 1.1rem;
+}
+
+.header-lang-select {
+    min-width: 100px;
+    background-color: rgb(38, 35, 35);
+    color: white;
+    border: none;
+}
+
+.footer {
+    background-color: rgb(38, 35, 35);
+    padding: 20px;
+    text-align: left;
+    font-size: 14px;
+    color: white;
+    border-top: 1px solid #e9ecef;
+}
+
+.footer a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+.language-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.globe-language-icon {
+    display: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.language-dropdown-wrapper {
+    position: relative;
+}
+
+.language-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.language-btn {
+    color: white;
+    border: none;
+    padding: 8px 0;
+    cursor: pointer;
+    background: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.language-btn i {
+    font-size: 1.2rem;
+}
+
+.language-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 150px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.language-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.language-menu a {
+    display: block;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.language-menu a:last-child {
+    border-bottom: none;
+}
+
+.language-menu a:hover {
+    background-color: #f8f9fa;
+    color: #0a41b9;
+}
+
+.language-menu a:first-child {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.language-menu a:last-child {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+/* Enhanced Language Dropdown Styles */
+.language-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.breadcrumb {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.breadcrumb a {
+    color: #6c757d;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    color: #6c757d;
+    padding: 0 5px;
+}
+
+/* Search Suggestions Styles */
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.suggestion-list {
+    padding: 0;
+}
+
+.suggestion-category {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-bottom: 1px solid #e9ecef;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.suggestion-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.suggestion-item:hover {
+    background-color: #f8f9fa;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-more {
+    background-color: #e9ecef;
+    color: #0a41b9;
+    font-weight: bold;
+    text-align: center;
+}
+
+.suggestion-more:hover {
+    background-color: #dee2e6;
+}
+
+/* Search Form Container */
+.search-form {
+    position: relative;
+}
+
+/* Animation for search input focus */
+.search-form input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(10, 65, 185, 0.25);
+    border-radius: 4px;
+}
+
+/* Highlight search terms in suggestions */
+.suggestion-item mark {
+    background-color: #fff3cd;
+    padding: 1px 2px;
+    border-radius: 2px;
+}
+
+@media (max-width: 1024px) {
+    .header-nyc-title {
+        font-size: 0.85rem;
+        line-height: 1.2;
+    }
+
+    .header-nyc-logo {
+        font-size: 1.5rem !important;
+    }
+
+    .header-lang-select {
+        min-width: 80px;
+        font-size: 0.8rem;
+    }
+
+    .search-form {
+        width: 100%;
+    }
+
+    .search-form input[type="search"] {
+        width: 100%;
+        min-width: 0;
+        /* Đảm bảo không bị giới hạn bởi min-width cũ */
+    }
+
+    .img-fluid {
+        height: 300px !important;
+    }
+
+    .footer-row {
+        justify-content: flex-start !important;
+    }
+
+    .footer .row > div {
+        text-align: left !important;
+    }
+
+    .step {
+        border: 1px solid #292929;
+    }
+
+    .step-line {
+        width: 161px !important;
+        height: 2px !important;
+        display: inline-block;
+        color: #292929;
+    }
+
+    .step-labels {
+        flex-direction: row !important;
+        align-items: center !important;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-nyc-title {
+        font-size: 0.85rem;
+        line-height: 1.2;
+    }
+
+    .header-nyc-logo {
+        font-size: 1.5rem !important;
+    }
+
+    .header-lang-select {
+        min-width: 80px;
+        font-size: 0.8rem;
+    }
+
+    .search-form {
+        width: 100%;
+    }
+
+    .search-form input[type="search"] {
+        width: 100%;
+        min-width: 0;
+        /* Đảm bảo không bị giới hạn bởi min-width cũ */
+    }
+
+    .img-fluid {
+        height: 200px !important;
+    }
+
+    .footer-row {
+        justify-content: flex-start !important;
+    }
+
+    .footer .row > div {
+        text-align: left !important;
+    }
+
+    .step {
+        border: 1px solid #292929;
+    }
+
+    .step-line {
+        width: 101px !important;
+        height: 2px !important;
+        display: inline-block;
+        color: #292929;
+    }
+
+    .step-labels {
+        flex-direction: row !important;
+        align-items: center !important;
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .header-nyc-title {
+        font-size: 0.75rem;
+        line-height: 1.1;
+    }
+
+    .header-nyc-logo {
+        font-size: 1.3rem !important;
+        margin-right: 2px !important;
+    }
+
+    .header-lang-select {
+        display: none;
+    }
+
+    .img-fluid {
+        height: 350px !important;
+    }
+
+    .stepper {
+        flex-direction: row !important;
+        width: 100%;
+    }
+
+    .step {
+        border: 1px solid #292929;
+    }
+
+    .step-line {
+        width: 27px !important;
+        height: 2px !important;
+        display: inline-block;
+        color: #292929;
+    }
+
+    .step-labels {
+        flex-direction: row !important;
+        align-items: center !important;
+        width: 100%;
+    }
+
+    .globe-language-icon {
+        display: block;
+    }
+
+    .header-lang-select.show {
+        display: block;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        min-width: 120px;
+        z-index: 1000;
+    }
+
+    .language-btn {
+        min-width: auto;
+        padding: 8px;
+    }
+
+    .language-btn span {
+        display: none;
+    }
+
+    .language-btn i {
+        margin: 0;
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .header-nyc-title {
+        font-size: 0.65rem !important;
+        line-height: 1;
+    }
+
+    .header-nyc-logo {
+        font-size: 1.5rem !important;
+    }
+
+    .header-lang-select {
+        min-width: 50px;
+        font-size: 0.5rem;
+    }
+
+    .logo-nypd {
+        font-size: 1.9rem !important;
+    }
+
+    .logo-nypd-img {
+        height: 60px !important;
+    }
+
+    .img-fluid {
+        height: 300px !important;
+    }
+
+    .language-menu {
+        font-size: 10px;
+    }
+
+    .search-form {
+        width: 100%;
+    }
+
+    .search-form input[type="search"] {
+        width: 100%;
+        min-width: 0;
+        /* Đảm bảo không bị giới hạn bởi min-width cũ */
+    }
+
+    .footer-row {
+        justify-content: flex-start !important;
+    }
+
+    .footer .row > div {
+        text-align: left !important;
+    }
+
+    #nyc-logo {
+        font-size: 1.8rem !important;
+    }
+
+    #search-footer {
+        left: 68px !important;
+        top: 10px !important;
+    }
+
+    .stepper {
+        flex-direction: row !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .step {
+        width: 30px !important;
+        height: 30px !important;
+        border: 1px solid #292929;
+    }
+
+    .step-line {
+        width: 36px !important;
+        height: 2px !important;
+        display: inline-block;
+        color: #292929;
+    }
+
+    .step-labels {
+        flex-direction: row !important;
+        align-items: center !important;
+        font-size: 0.8rem;
+    }
+
+    .globe-language-icon {
+        display: block;
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.2rem;
+        color: white;
+        pointer-events: none;
+        z-index: 10;
+    }
+
+    .language-dropdown-wrapper select {
+        text-indent: -9999px;
+        background-color: rgb(38, 35, 35) !important;
+        border: none !important;
+        width: 40px !important;
+        min-width: 40px !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        color: inherit !important;
+    }
+
+    .language-dropdown-wrapper {
+        width: 40px !important;
+    }
+}
+
+.stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.step {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 1px solid #292929;
+    background: #eee;
+    color: #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.step.active {
+    background: #111;
+    color: #fff;
+}
+
+.step-line {
+    width: 270px;
+    height: 3px;
+    background: #ccc;
+    margin: 0 0;
+}
+
+.custom-carousel {
+    width: 100%;
+    max-width: 1100px;
+    aspect-ratio: 16/7;
+    margin: 32px auto 24px auto;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-carousel .carousel-inner,
+.custom-carousel .carousel-item,
+.custom-carousel .carousel-item img {
+    width: 100%;
+    height: 100%;
+}
+
+.custom-carousel .carousel-item img {
+    object-fit: cover;
+    object-position: center;
+    border-radius: 0;
+}
+
+/* Form validation styles */
+.is-invalid {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+.is-invalid:focus {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+}
+
+/* Modal styling */
+.modal-content {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    border-bottom: 1px solid #dee2e6;
+    padding: 1rem 1.5rem;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 1rem 1.5rem;
+}
+
+/* Submit confirmation modal */
+#submitConfirmModal .modal-content {
+    border: 2px solid #28a745;
+}
+
+#submitConfirmModal .modal-body {
+    text-align: center;
+    padding: 2rem;
+}
+
+/* Delete confirmation modal */
+#deleteConfirmModal .modal-content {
+    border: 2px solid #dc3545;
+}
+
+#deleteConfirmModal .modal-body {
+    text-align: center;
+    padding: 2rem;
+}
+
+/* Form styling */
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Button styling */
+.btn-dark:hover {
+    background-color: #343a40;
+    border-color: #343a40;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+}
+
+/* Table styling */
+.table th {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    font-weight: 600;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* Alert styling */
+.alert {
+    border-radius: 8px;
+    border: none;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+/* Loading spinner */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+    
+    .modal-body {
+        padding: 1rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+}
+
+/* Stepper styling */
+.stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.step {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #eee;
+    color: #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.step.active {
+    background: #111;
+    color: #fff;
+}
+
+.step-line {
+    width: 270px;
+    height: 3px;
+    background: #ccc;
+    margin: 0 0;
+}
+
+@media (max-width: 500px) {
+    .stepper {
+        flex-direction: column;
+    }
+    .step-line {
+        width: 3px;
+        height: 30px;
+        margin: 4px 0;
+    }
+    .step-labels {
+        flex-direction: column;
+        align-items: center;
+    }
+}
