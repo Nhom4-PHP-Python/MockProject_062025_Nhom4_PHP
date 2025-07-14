@@ -132,7 +132,19 @@
                                     @endif
                                 text-capitalize">{{ $status }}</span>
               </td>
-              <td><a href="#" class="text-primary">View detail</a></td>
+              {{-- <td><a href="#" class="text-primary">View detail</a></td> --}}
+              <td>
+                   <form action="{{ route('report.view') }}" method="POST">
+                      @csrf
+                      {{-- $report->case_id --}}
+                      <input type="hidden" name="id" value="{{ Crypt::encrypt($report->report_id) }}">
+                      <input type="hidden" name="case_id" value="{{ $report->case_id }}">
+                      <button type="submit" class="btn btn-primary">View Detail</button>
+                  </form>
+
+              </td>
+  
+
             </tr>
             @endforeach
           </tbody>

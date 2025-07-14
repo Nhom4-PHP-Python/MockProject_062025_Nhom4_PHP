@@ -28,11 +28,50 @@ Route::get('/sc_001', [App\Http\Controllers\HomeController::class, 'index'])->na
 Route::get('/sc_002', [App\Http\Controllers\HomeController::class, 'step1'])->name('sc_002');
 Route::get('/sc_003', [App\Http\Controllers\HomeController::class, 'step2'])->name('sc_003');
 Route::get('/sc_006', [App\Http\Controllers\HomeController::class, 'step3'])->name('sc_006');
+// Route::controller(App\Http\Controllers\HomeController::class)->group(function () {
+//     Route::get('/sc_001', 'index')->name('sc_001');
+//     Route::get('/sc_002', 'step1')->name('sc_002');
+//     Route::get('/sc_003', 'step2')->name('sc_003');
+//     Route::get('/sc_006', 'step3')->name('sc_006');
+// });
+
 
 Route::get('lang/{locale}', [LanguageController::class, 'changeLanguage'])->name('lang.switch');
 Route::get('api/language/info', [LanguageController::class, 'getLanguageInfo'])->name('language.info');
 
 // Report routes
+use App\Http\Controllers\ReportController\ReportController;
+
+// Route::prefix('report')->controller(ReportController::class)->group(function () {
+//     Route::post('/store', 'store')->name('report.store');
+
+//     Route::get('/step1', 'step1')->name('report.step1');
+//     Route::post('/step1', 'postStep1')->name('report.postStep1');
+
+//     Route::get('/step2', 'step2')->name('report.step2');
+//     Route::post('/step2', 'postStep2')->name('report.postStep2');
+
+//     Route::get('/step3', 'step3')->name('report.step3');
+
+//     // Party
+//     Route::get('/party/create', 'createParty')->name('report.party.create');
+//     Route::post('/party/store', 'storeParty')->name('report.party.store');
+//     Route::post('/party/store-ajax', 'storePartyAjax')->name('report.party.storeAjax');
+//     Route::get('/party/edit/{idx}', 'editParty')->name('report.party.edit');
+//     Route::post('/party/update/{idx}', 'updateParty')->name('report.party.update');
+//     Route::get('/party/delete/{idx}', 'deleteParty')->name('report.party.delete');
+
+//     // Evidence
+//     Route::get('/evidence/create', 'createEvidence')->name('report.evidence.create');
+//     Route::post('/evidence/store', 'storeEvidence')->name('report.evidence.store');
+//     Route::get('/evidence/edit/{idx}', 'editEvidence')->name('report.evidence.edit');
+//     Route::post('/evidence/update/{idx}', 'updateEvidence')->name('report.evidence.update');
+//     Route::get('/evidence/delete/{idx}', 'deleteEvidence')->name('report.evidence.delete');
+
+//     // Confirm
+//     Route::get('/confirm/{id}', 'confirm')->name('report.confirm');
+// });
+
 Route::post('/report/store', [App\Http\Controllers\ReportController\ReportController::class, 'store'])->name('report.store');
 Route::get('/report/step1', [App\Http\Controllers\ReportController\ReportController::class, 'step1'])->name('report.step1');
 Route::post('/report/step1', [App\Http\Controllers\ReportController\ReportController::class, 'postStep1'])->name('report.postStep1');
@@ -56,8 +95,12 @@ Route::get('/report/evidence/delete/{idx}', [App\Http\Controllers\ReportControll
 Route::get('/search', [SearchController::class, 'search'])->name('search');
 Route::get('/ajax/search', [SearchController::class, 'ajaxSearch'])->name('ajax.search');
 
-Route::get('/sc_011/report/view', [\App\Http\Controllers\Sc011Controller::class, 'showReportDetail']);
-Route::get('/sc_011/report/form', [\App\Http\Controllers\Sc011Controller::class, 'showReportFormWithDetails']);
+//SC_11
+Route::post('/sc_011/report/view',[\App\Http\Controllers\Sc011Controller::class, 'view'])->name('report.view');
+Route::post('/report/{id}/approve', [\App\Http\Controllers\Sc011Controller::class, 'approve'])->name('report.approve');
+Route::post('/report/{id}/reject', [\App\Http\Controllers\Sc011Controller::class, 'reject'])->name('report.reject');
+
+
 
 Route::group(['prefix' => 'admin'], function () {
     // Route::get('/', [AdminController::class, 'index'])->name('admin.index');
