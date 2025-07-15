@@ -8,6 +8,31 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />  
 </head>
 <body class="bg-white">
+  <script>
+        function openFullscreen() {
+            let elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) { /* Firefox */
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { /* IE/Edge */
+                elem.msRequestFullscreen();
+            }
+        }
+         function exitFullscreen() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+    </script>
 
   <!-- Header bar -->
   <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom position-fixed top-0 w-100" style="background-color: #F3F3F3; z-index: 1030;">
@@ -17,12 +42,12 @@
         <i class="fa-solid fa-arrow-left"></i>
     </a>
     <div class="d-flex align-items-center">
-       <a href="{{ route('reports') }}" class="btn btn-outline-secondary border-0 shadow-none mb-2">
+       {{-- <a href="{{ route('reports') }}" class="btn btn-outline-secondary border-0 shadow-none mb-2">
              <i class="fa-regular fa-window-minimize me-2"></i>
-        </a>
-        <a href="#" class="btn btn-outline-secondary border-0 shadow-none ">
-            <i class="fa-regular fa-square me-2"></i>
-        </a>
+        </a> --}}
+         <button onclick="exitFullscreen()"  class="btn btn-outline-secondary border-0 shadow-none mb-2"> <i class="fa-regular fa-window-minimize me-2"></i></button>
+          <button onclick="openFullscreen()"  class="btn btn-outline-secondary border-0 shadow-none">   <i class="fa-regular fa-square me-2"></i></button>
+
         <a href="{{ route('reports') }}" class="btn btn-outline-secondary border-0 shadow-none ">
               <i class="fa-solid fa-xmark"></i>
         </a>
