@@ -1,10 +1,9 @@
-{{-- resources/views/reports/report.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
 <div class="container-fluid reports-wrapper">
   <div class="row">
-    {{-- Sidebar --}}
+    <!-- Sidebar -->
     <div class="col-md-2 sidebar bg-white p-4 d-flex flex-column justify-content-between" style="height: 100vh;">
       <div>
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -47,7 +46,7 @@
       </div>
     </div>
 
-    {{-- Main content --}}
+    <!-- Main content -->
     <div class="col-md-10 py-4 px-5 main-content" style="background-color: #66798A;">
       <div class="filters mb-3 d-flex gap-2 flex-wrap">
         <a href="{{ route('reports') }}" class="btn btn-outline-white">All</a>
@@ -95,8 +94,6 @@
             placeholder="Select date range" value="{{ request('created_at') }}">
           <button type="submit" class="btn btn-outline-light">Apply</button>
         </form>
-
-
       </div>
 
       <div class="table-responsive rounded">
@@ -134,17 +131,14 @@
               </td>
               {{-- <td><a href="#" class="text-primary">View detail</a></td> --}}
               <td>
-                   <form action="{{ route('report.view') }}" method="POST">
-                      @csrf
-                      {{-- $report->case_id --}}
-                      <input type="hidden" name="id" value="{{ Crypt::encrypt($report->report_id) }}">
-                      <input type="hidden" name="case_id" value="{{ $report->case_id }}">
-                      <button type="submit" class="btn btn-primary">View Detail</button>
-                  </form>
-
+                <form action="{{ route('report.view') }}" method="POST">
+                  @csrf
+                  {{-- $report->case_id --}}
+                  <input type="hidden" name="id" value="{{ Crypt::encrypt($report->report_id) }}">
+                  <input type="hidden" name="case_id" value="{{ $report->case_id }}">
+                  <button type="submit" class="btn btn-primary">View Detail</button>
+                </form>
               </td>
-  
-
             </tr>
             @endforeach
           </tbody>
@@ -158,9 +152,7 @@
               </td>
             </tr>
           </tfoot>
-
         </table>
-
       </div>
     </div>
   </div>

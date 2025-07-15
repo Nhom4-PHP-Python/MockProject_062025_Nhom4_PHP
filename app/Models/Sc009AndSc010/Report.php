@@ -67,7 +67,7 @@ class Report extends Model
       }
     }
 
-    // Return paginated results (12 reports per page)
-    return $query->paginate(12);
+    // Return paginated results (10 reports per page)
+    return $query->paginate(10);
   }
 }
